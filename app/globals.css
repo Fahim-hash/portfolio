@@ -19,6 +19,24 @@
   }
 }
 
+/* --- Interactive Fixes --- */
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  /* Website size 80% e niye asar jonno */
+  zoom: 0.8; 
+  -moz-transform: scale(0.8);
+  -moz-transform-origin: top center;
+}
+
+/* --- Smooth Scroll behavior --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- Marquee Animation --- */
 @keyframes scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -30,13 +48,6 @@
   animation: scroll 30s linear infinite;
 }
 
-/* Mouse nile thome jabe (Optional) */
 .animate-marquee:hover {
   animation-play-state: paused;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
