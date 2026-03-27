@@ -12,10 +12,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// THIK KORA METADATA SECTION
 export const metadata: Metadata = {
-  title: "Syed Fahim Muddasir", // Ekhane tomar nam ba portfolio-r nam dao
-  description: "Graphic Designer & Student", // Chotto ekta descriptionexport const metadata: Metadata = {
-    icon: "/icon.png", // Ekhane just file-er nam-ta thaklei hobe
+  title: "Syed Fahim Muddasir",
+  description: "Graphic Designer & Student",
+  icons: {
+    icon: "/icon.png", 
   },
 };
 
