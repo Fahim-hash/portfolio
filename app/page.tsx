@@ -23,6 +23,7 @@ const testimonials = [
   { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
   { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
   { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
+  { name: "Md Ashraful Islam", text: "Fahim is a remarkable addition to our foundation. He thinks beyond aesthetics, optimizing processes while delivering creative excellence. His growth has been steady and his impact on our visual identity is undeniable. A truly promising creative leader.", role: "Founder & President, Ta'atuf Foundation" }
 ];
   // --- STATES ---
   const [selectedVideo, setSelectedVideo] = useState<{src: string, title: string, tag: string} | null>(null);
