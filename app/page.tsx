@@ -77,7 +77,7 @@ const testimonials = [
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
       >
        export default function Hero() {
-  return (
+
     <section className="relative h-screen flex flex-col justify-center items-center text-center px-6 bg-black overflow-hidden">
       {/* Background Glow (Futuristic Vibe) */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 blur-[120px] rounded-full" />
