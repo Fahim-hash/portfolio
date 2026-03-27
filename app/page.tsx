@@ -597,3 +597,4 @@ const testimonials = [
       </motion.div>
     </main>
   );
+  }
