@@ -14,7 +14,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Syed Fahim Muddasir", // Ekhane tomar nam ba portfolio-r nam dao
-  description: "Graphic Designer & Student", // Chotto ekta description
+  description: "Graphic Designer & Student", // Chotto ekta descriptionexport const metadata: Metadata = {
+    icon: "/icon.png", // Ekhane just file-er nam-ta thaklei hobe
+  },
 };
 
 export default function RootLayout({
