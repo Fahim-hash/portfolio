@@ -10,20 +10,21 @@ import { SiBehance } from "react-icons/si";
 export default function Portfolio() {
   
   const clientLogos = [
-  { name: "TongErKhobor", src: "/logos/tongerkhobor.png", url: "https://www.instagram.com/tongerkhobor" },
-  { name: "General Science Olympiad", src: "/logos/sciencebaze.png", url: "https://www.facebook.com/generalscienceolympiad" },
-  { name: "Ta'atuf Foundation", src: "/logos/taatuf.png", url: "https://www.facebook.com/taatuf.foundation" },
-  { name: "Willes Literary Club", src: "/logos/vb.png", url: "https://www.facebook.com/profile.php?id=61560572355031" },
-  { name: "RelaxStudio", src: "/logos/relax.png", url: "https://www.instagram.com/relaxstudio__" },
-  { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
-];
+    { name: "TongErKhobor", src: "/logos/tongerkhobor.png", url: "https://www.instagram.com/tongerkhobor" },
+    { name: "General Science Olympiad", src: "/logos/sciencebaze.png", url: "https://www.facebook.com/generalscienceolympiad" },
+    { name: "Ta'atuf Foundation", src: "/logos/taatuf.png", url: "https://www.facebook.com/taatuf.foundation" },
+    { name: "Willes Literary Club", src: "/logos/vb.png", url: "https://www.facebook.com/profile.php?id=61560572355031" },
+    { name: "RelaxStudio", src: "/logos/relax.png", url: "https://www.instagram.com/relaxstudio__" },
+    { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
+  ];
 
-const testimonials = [
-  { name: "Arifur Rahman Tahmid", text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", role: "President, Willes Literary Club (GEN-2)" },
-  { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
-  { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
-  { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
-];
+  const testimonials = [
+    { name: "Arifur Rahman Tahmid", text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", role: "President, Willes Literary Club (GEN-2)" },
+    { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
+    { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
+    { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
+  ];
+
   // --- STATES ---
   const [selectedVideo, setSelectedVideo] = useState<{src: string, title: string, tag: string} | null>(null);
 
@@ -41,17 +42,6 @@ const testimonials = [
     show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
   };
 
-  // Hover animation for social icon cards
-  const iconCardHover = {
-    rest: { scale: 1, y: 0, backgroundColor: "rgba(24, 24, 27, 0.5)" }, // zinc-900/50
-    hover: { 
-      scale: 1.05, 
-      y: -5,
-      backgroundColor: "rgba(79, 70, 229, 0.1)", // indigo-600/10
-      transition: { duration: 0.2, ease: "easeInOut" }
-    }
-  };
-
   const socialLinks = [
     { name: "Facebook", icon: FaFacebookF, url: "https://www.facebook.com/syedfahim.muddasir/", color: "hover:text-[#1877F2]" },
     { name: "Instagram", icon: FaInstagram, url: "https://instagram.com/mr_relax_bro", color: "hover:text-[#E4405F]" },
@@ -62,7 +52,7 @@ const testimonials = [
   ];
 
   return (
-    <main className="min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30">
+    <main className="min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
       
       {/* Background Decorative Glows */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
@@ -70,53 +60,62 @@ const testimonials = [
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[130px] rounded-full" />
       </div>
 
+      {/* =========================================
+          HERO BANNER SECTION (FIXED & INTEGRATED)
+      ========================================= */}
+      <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center w-full max-w-7xl mx-auto mb-20 mt-10">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 blur-[120px] rounded-full" />
+        
+        {/* Main Text & Sub Text Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 w-full"
+        >
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic">
+            Syed Fahim <span className="text-purple-500">Muddasir</span>
+          </h1>
+          <p className="mt-4 text-gray-400 text-lg md:text-xl font-medium tracking-widest uppercase">
+            Creative Lead @ODF — Founder of RelaxStudio
+          </p>
+          
+          {/* Buttons */}
+          <div className="mt-10 flex gap-4 justify-center">
+            <button className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-purple-500 hover:text-white transition-all shadow-lg hover:shadow-purple-500/25">
+              Explore Work
+            </button>
+            <button className="px-8 py-3 border border-gray-700 text-white font-bold rounded-full hover:border-white transition-all">
+              Get In Touch
+            </button>
+          </div>
+        </motion.div>
+
+        {/* THE BANNER IMAGE SECTION */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="relative mt-16 w-full max-w-6xl h-[300px] md:h-[500px] rounded-2xl overflow-hidden border border-gray-800 shadow-[0_0_80px_-20px_rgba(168,85,247,0.3)] group"
+        >
+          <img 
+            src="/banner.jpg" 
+            alt="Obsidian Complexity - Cyber Academic Banner"
+            className="w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-105" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-80" />
+        </motion.div>
+      </section>
+
+      {/* =========================================
+          MAIN PORTFOLIO GRID SECTION
+      ========================================= */}
       <motion.div 
         variants={container}
         initial="hidden"
         animate="show"
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
       >
-       export default function Hero() {
-
-    <section className="relative h-screen flex flex-col justify-center items-center text-center px-6 bg-black overflow-hidden">
-      {/* Background Glow (Futuristic Vibe) */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 blur-[120px] rounded-full" />
-      
-      {/* 1. Main Text & Sub Text Section */}
-      <div className="relative z-10">
-        <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic">
-          Syed Fahim <span className="text-purple-500">Muddasir</span>
-        </h1>
-        <p className="mt-4 text-gray-400 text-lg md:text-xl font-medium tracking-widest uppercase">
-          Creative Lead @ODF — Founder of RelaxStudio
-        </p>
-        
-        {/* Buttons */}
-        <div className="mt-10 flex gap-4 justify-center">
-          <button className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-purple-500 hover:text-white transition-all">
-            Explore Work
-          </button>
-          <button className="px-8 py-3 border border-gray-700 text-white font-bold rounded-full hover:border-white transition-all">
-            Get In Touch
-          </button>
-        </div>
-      </div>
-
-      {/* 2. THE BANNER IMAGE SECTION (TEXT-ER NICHE) */}
-      <div className="relative mt-16 w-full max-w-7xl h-96 rounded-2xl overflow-hidden border border-gray-800 shadow-[0_0_80px_-20px_rgba(168,85,247,0.3)]">
-        {/* Tomar Generated Image-ta "/banner.jpg" name use koro */}
-        <img 
-          src="/banner.jpg" 
-          alt="Obsidian Complexity - Cyber Academic Banner"
-          className="w-full h-full object-cover object-center transition-all duration-700 hover:scale-110" 
-        />
-        {/* Subtle Overlay to make it feel cinematic */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-black/10" />
-      </div>
-
-    </section>
-  );
-} 
         {/* --- MAIN BIO CARD + PICTURE --- */}
         <motion.div 
           variants={item}
@@ -124,7 +123,6 @@ const testimonials = [
         >
           {/* Layout Container */}
           <div className="flex flex-col items-start gap-8 relative z-10">
-            
             {/* Profile Picture (Bigger & Glow Effect) */}
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
@@ -146,7 +144,6 @@ const testimonials = [
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3>
               </div>
-              
               <h1 className="text-7xl md:text-7xl font-black tracking-tighter leading-[0.9]">
                 Syed Fahim<br />
                 <span className="text-zinc-600 hover:text-indigo-400 transition-all duration-500">Muddasir</span>
@@ -187,54 +184,48 @@ const testimonials = [
               The project blends a sophisticated "dark mode" aesthetic with electric neon highlights.
             </p>
           </div>
-          
-          {/* Animated Glow Effect on Hover */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl group-hover:bg-indigo-500/20 transition-all duration-500" />
         </motion.a>
 
-{/* Expertise Tag Cloud */}
-<motion.div 
-  variants={item}
-  className="md:col-span-2 bg-zinc-900/50 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] p-8 relative overflow-hidden group"
->
-  {/* Big Highlight Section */}
-  <div className="mb-10">
-    <div className="flex flex-col">
-      {/* Big Number */}
-      <span className="text-7xl font-black text-white tracking-tighter leading-none">
-        2<span className="text-indigo-500">yr+</span>
-      </span>
-      
-      {/* Label Below the Number */}
-      <div className="flex items-center gap-3 mt-2">
-        <div className="w-8 h-[1px] bg-indigo-500/50" />
-        <h3 className="text-zinc-500 uppercase text-xs tracking-[0.4em] font-bold">
-          Creative Expertise In
-        </h3>
-      </div>
-    </div>
-  </div>
+        {/* Expertise Tag Cloud */}
+        <motion.div 
+          variants={item}
+          className="md:col-span-2 bg-zinc-900/50 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] p-8 relative overflow-hidden group"
+        >
+          {/* Big Highlight Section */}
+          <div className="mb-10">
+            <div className="flex flex-col">
+              <span className="text-7xl font-black text-white tracking-tighter leading-none">
+                2<span className="text-indigo-500">yr+</span>
+              </span>
+              <div className="flex items-center gap-3 mt-2">
+                <div className="w-8 h-[1px] bg-indigo-500/50" />
+                <h3 className="text-zinc-500 uppercase text-xs tracking-[0.4em] font-bold">
+                  Creative Expertise In
+                </h3>
+              </div>
+            </div>
+          </div>
 
-  {/* Tags Section */}
-  <div className="flex flex-wrap gap-2.5 relative z-10">
-    {[
-      'Visual Branding', 'Logo Design', 'Social Media Poster Design', 
-      'Event Branding', 'T-Shirt Design', 'Motion Graphics', 
-      'Video Editing', 'Photography'
-    ].map((skill) => (
-      <span 
-        key={skill} 
-        className="px-5 py-2.5 bg-zinc-800/30 rounded-full text-sm border border-zinc-800/50 hover:border-indigo-500/50 hover:bg-zinc-800 transition-all duration-300 cursor-default text-zinc-400 hover:text-white font-medium"
-      >
-        {skill}
-      </span>
-    ))}
-  </div>
+          {/* Tags Section */}
+          <div className="flex flex-wrap gap-2.5 relative z-10">
+            {[
+              'Visual Branding', 'Logo Design', 'Social Media Poster Design', 
+              'Event Branding', 'T-Shirt Design', 'Motion Graphics', 
+              'Video Editing', 'Photography'
+            ].map((skill) => (
+              <span 
+                key={skill} 
+                className="px-5 py-2.5 bg-zinc-800/30 rounded-full text-sm border border-zinc-800/50 hover:border-indigo-500/50 hover:bg-zinc-800 transition-all duration-300 cursor-default text-zinc-400 hover:text-white font-medium"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+          <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
+        </motion.div>
 
-  {/* Background Glow */}
-  <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
-</motion.div>
-        {/* --- DESIGNS SHOWCASE SECTION (FIXED 10 CARDS - NO GAPS) --- */}
+        {/* --- DESIGNS SHOWCASE SECTION --- */}
         <motion.div variants={item} className="md:col-span-4 mt-12 mb-6">
           <div className="flex items-end gap-4 mb-8">
             <h2 className="text-5xl font-black tracking-tighter">Selected <span className="text-indigo-500">Designs</span></h2>
@@ -243,7 +234,6 @@ const testimonials = [
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 grid-flow-row-dense">
-            
             {/* 1. Portrait (1080x1350) */}
             <motion.div whileHover={{ y: -10 }} className="md:row-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/5]">
               <Image src="/designs/work1.png" alt="W1" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
@@ -302,7 +292,7 @@ const testimonials = [
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
               <Image src="/designs/work7.png" alt="W7" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
+                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
                 <h3 className="text-xl font-bold text-white">Poet Birthday Post</h3>
               </div>
             </motion.div>
@@ -311,7 +301,7 @@ const testimonials = [
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
               <Image src="/designs/work8.png" alt="W8" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
+                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
                 <h3 className="text-xl font-bold text-white">Mourn Post</h3>
               </div>
             </motion.div>
@@ -329,7 +319,7 @@ const testimonials = [
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
               <Image src="/designs/work10.png" alt="W10" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Madesiho</span>
+                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Madesiho</span>
                 <h3 className="text-xl font-bold text-white">T-Shirt Design And Poster</h3>
               </div>
             </motion.div>
@@ -337,7 +327,7 @@ const testimonials = [
           </div>
         </motion.div> 
 
-{/* --- VIDEO SHOWCASE SECTION --- */}
+        {/* --- VIDEO SHOWCASE SECTION --- */}
         <motion.div variants={item} className="md:col-span-4 mt-16 mb-12">
           <div className="flex items-end gap-4 mb-8">
             <h2 className="text-5xl font-black tracking-tighter">Motion <span className="text-indigo-500">Graphics</span></h2>
@@ -346,8 +336,7 @@ const testimonials = [
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* Video Card 1 - Full Width/Large */}
+            {/* Video Card 1 */}
             <motion.div 
               onClick={() => setSelectedVideo({
                 src: "/videos/main.mp4",
@@ -394,11 +383,10 @@ const testimonials = [
                 <h3 className="text-3xl font-bold text-white">New Year Video</h3>
               </div>
             </motion.div>
-
           </div>
         </motion.div>
        
-        {/* --- VIDEO EDITING SECTION (WITH POPUP & SOUND) --- */}
+        {/* --- VIDEO EDITING SECTION --- */}
         <motion.div variants={item} className="md:col-span-4 mt-20 mb-12">
           <div className="flex items-end gap-4 mb-8">
             <h2 className="text-5xl font-black tracking-tighter text-white">Video<span className="text-indigo-500"> Editing</span></h2>
@@ -407,7 +395,6 @@ const testimonials = [
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
             {/* Video Card 1 */}
             <motion.div 
               onClick={() => setSelectedVideo({
@@ -489,146 +476,95 @@ const testimonials = [
                 </motion.div>
               </motion.div>
             )}
-        
           </AnimatePresence>
         </motion.div>
 
-{/* --- INFINITE LOGO SCROLL SECTION --- */}
-<motion.div variants={item} className="md:col-span-4 mt-20 overflow-hidden relative py-10">
-  
-  {/* Header Text */}
-  <div className="text-center mb-10">
-    <p className="text-zinc-500 text-sm font-medium tracking-widest uppercase mb-2">
-      Working With
-    </p>
-  </div>
-
-  {/* Side Fades (Video-r moto side e halka shadow/fade) */}
-  <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10" />
-  <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10" />
-
-  {/* The Marquee Container */}
-  <div className="flex overflow-hidden group">
-    <div className="animate-marquee flex gap-12 items-center whitespace-nowrap">
-      
-      {/* 1st Set of Logos */}
-      {[...clientLogos, ...clientLogos].map((logo, index) => (
-        <a 
-          key={index} 
-          href={logo.url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center gap-4 px-8 py-4 opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0"
-        >
-          <div className="relative w-12 h-12 md:w-16 md:h-16">
-            <Image 
-              src={logo.src} 
-              alt={logo.name} 
-              fill 
-              className="object-contain" 
-            />
+        {/* --- INFINITE LOGO SCROLL SECTION --- */}
+        <motion.div variants={item} className="md:col-span-4 mt-20 overflow-hidden relative py-10">
+          <div className="text-center mb-10">
+            <p className="text-zinc-500 text-sm font-medium tracking-widest uppercase mb-2">
+              Working With
+            </p>
           </div>
-          <span className="text-xl md:text-2xl font-bold text-white tracking-tight">
-            {logo.name}
-          </span>
-        </a>
-      ))}
-    </div>
-  </div>
-</motion.div>
-{/* --- TESTIMONIALS SECTION --- */}
-<motion.div variants={item} className="md:col-span-4 mt-20 mb-12 px-6">
-  <div className="text-center mb-16 relative z-10">
-    <h2 className="text-4xl font-black tracking-tighter text-white">Client <span className="text-indigo-500">Love</span></h2>
-    <p className="text-zinc-500 font-mono text-[10px] mt-1 uppercase tracking-[0.3em]">Interactive Feedback Cloud</p>
-  </div>
-
-  {/* Grid Layout: PC-te 3 column, Tablet-e 2, Mobile-e 1 */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
-    {testimonials.map((t, index) => (
-      <motion.div
-        key={index}
-        drag
-        dragConstraints={{ left: -20, right: 20, top: -20, bottom: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-          y: [0, index % 2 === 0 ? -8 : 8, 0],
-          transition: { 
-            duration: 5, 
-            repeat: Infinity, 
-            delay: index * 0.1, 
-            ease: "easeInOut" 
-          }
-        }}
-        whileHover={{ 
-          scale: 1.02, 
-          rotate: index % 2 === 0 ? 1 : -1,
-          zIndex: 50 
-        }}
-        // "Ahiya'r Ammu" ba special card gulo highlight korar jonno logic
-        className={`p-6 bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] shadow-xl cursor-grab active:cursor-grabbing transition-all
-          ${index === 2 ? 'lg:scale-110 border-indigo-500/20 bg-zinc-900/60' : ''}
-          ${index === 6 ? 'lg:col-span-1 border-pink-500/10' : ''}
-        `}
-      >
-        <p className="text-zinc-300 text-[13px] leading-relaxed mb-4 italic font-medium leading-relaxed">
-          "{t.text}"
-        </p>
-        <div className="flex flex-col border-l-2 border-indigo-500/40 pl-4">
-          <span className="text-white font-black text-[10px] uppercase tracking-[0.2em]">
-            {t.name}
-          </span>
-          <span className="text-zinc-500 text-[9px] font-mono mt-0.5">
-            {t.role}
-          </span>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-</motion.div>
-        {/* --- CONTACT SECTION (The End) --- */}
-        <motion.div
-          variants={item}
-          className="md:col-span-4 bg-zinc-900/30 border border-zinc-800/50 backdrop-blur-sm rounded-[2.5rem] p-10 mt-8"
-        >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-            <div>
-              <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
-              <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
-            </div>
-            <a href="mailto:fahimnafiz70@gmail.com" className="px-8 py-4 bg-indigo-600 rounded-full font-semibold hover:bg-indigo-500 transition-colors flex items-center gap-2 group">
-              Drop an Email
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </a>
-          </div>
-
-          {/* Social Links Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {socialLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <motion.a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10" />
+          <div className="flex overflow-hidden group">
+            <div className="animate-marquee flex gap-12 items-center whitespace-nowrap">
+              {[...clientLogos, ...clientLogos].map((logo, index) => (
+                <a 
+                  key={index} 
+                  href={logo.url} 
+                  target="_blank" 
                   rel="noopener noreferrer"
-                  variants={iconCardHover}
-                  initial="rest"
-                  whileHover="hover"
-                  className={`border border-zinc-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-3 transition-colors ${link.color}`}
+                  className="flex items-center gap-4 px-8 py-4 opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0"
                 >
-                  <Icon className="w-8 h-8" strokeWidth={1.5} />
-                  <span className="text-sm font-medium text-zinc-300">{link.name}</span>
-                </motion.a>
-              );
-            })}
+                  <div className="relative w-12 h-12 md:w-16 md:h-16">
+                    <Image src={logo.src} alt={logo.name} fill className="object-contain" />
+                  </div>
+                  <span className="text-xl md:text-2xl font-bold text-white tracking-tight">
+                    {logo.name}
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
         </motion.div>
 
-        {/* Footer info */}
-        <motion.div variants={item} className="md:col-span-4 text-center text-zinc-700 py-8 text-sm font-mono">
-            © 2026 Syed Fahim Muddasir. Built with Next.js & Framer Motion.
+        {/* --- TESTIMONIALS SECTION (FIXED & COMPLETED) --- */}
+        <motion.div variants={item} className="md:col-span-4 mt-20 mb-12 px-6">
+          <div className="text-center mb-16 relative z-10">
+            <h2 className="text-4xl font-black tracking-tighter text-white">Client <span className="text-indigo-500">Love</span></h2>
+            <p className="text-zinc-500 font-mono text-[10px] mt-1 uppercase tracking-[0.3em]">Interactive Feedback Cloud</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
+            {testimonials.map((t, index) => (
+              <motion.div
+                key={index}
+                drag
+                dragConstraints={{ left: -20, right: 20, top: -20, bottom: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{
+                  y: [0, index % 2 === 0 ? -8 : 8, 0],
+                  transition: { 
+                    duration: 5, 
+                    repeat: Infinity, 
+                    delay: index * 0.1, 
+                    ease: "easeInOut" 
+                  }
+                }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  rotate: index % 2 === 0 ? 1 : -1,
+                  zIndex: 50 
+                }}
+                className={`p-8 bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] shadow-xl cursor-grab active:cursor-grabbing flex flex-col justify-between h-full
+                ${index === 3 ? 'border-indigo-500/30 bg-indigo-500/5' : ''}`}
+              >
+                <p className="text-zinc-300 italic text-lg mb-8 leading-relaxed">"{t.text}"</p>
+                <div className="flex flex-col gap-1 border-t border-zinc-800/50 pt-4 mt-auto">
+                  <h4 className="text-white font-bold">{t.name}</h4>
+                  <span className="text-indigo-400 text-xs font-mono uppercase tracking-widest">{t.role}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* --- SOCIAL LINKS FOOTER --- */}
+        <motion.div variants={item} className="md:col-span-4 flex flex-wrap justify-center items-center gap-6 mt-12 pb-12 border-t border-zinc-800/50 pt-12">
+            {socialLinks.map((social, i) => (
+              <a 
+                key={i} 
+                href={social.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className={`text-zinc-500 transition-colors duration-300 flex items-center gap-2 hover:scale-110 ${social.color}`}
+              >
+                <social.icon size={28} />
+              </a>
+            ))}
         </motion.div>
 
       </motion.div>
