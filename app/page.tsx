@@ -22,10 +22,7 @@ const testimonials = [
   { name: "Arifur Rahman Tahmid", text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", role: "President, Willes Literary Club (GEN-2)" },
   { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
   { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
-  { name: "TongErKhobor Team", text: "Quick delivery ar professional branding-er jonno Fahim-i best choice.", role: "Media Department" },
-  { name: "Samin", text: "Event branding-er logic gulo joss! Willian's Study Tour-er kaaj-ta fire chhilo.", role: "HSC '26 Cohort" },
   { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
-  { name: "Labib", text: "Tech stack ar UI design-er combination-ta Fahim-er moto kew pare na.", role: "Tech Lead" }
 ];
   // --- STATES ---
   const [selectedVideo, setSelectedVideo] = useState<{src: string, title: string, tag: string} | null>(null);
