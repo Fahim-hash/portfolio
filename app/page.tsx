@@ -76,7 +76,47 @@ const testimonials = [
         animate="show"
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
       >
+       export default function Hero() {
+  return (
+    <section className="relative h-screen flex flex-col justify-center items-center text-center px-6 bg-black overflow-hidden">
+      {/* Background Glow (Futuristic Vibe) */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 blur-[120px] rounded-full" />
+      
+      {/* 1. Main Text & Sub Text Section */}
+      <div className="relative z-10">
+        <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic">
+          Syed Fahim <span className="text-purple-500">Muddasir</span>
+        </h1>
+        <p className="mt-4 text-gray-400 text-lg md:text-xl font-medium tracking-widest uppercase">
+          Creative Lead @ODF — Founder of RelaxStudio
+        </p>
         
+        {/* Buttons */}
+        <div className="mt-10 flex gap-4 justify-center">
+          <button className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-purple-500 hover:text-white transition-all">
+            Explore Work
+          </button>
+          <button className="px-8 py-3 border border-gray-700 text-white font-bold rounded-full hover:border-white transition-all">
+            Get In Touch
+          </button>
+        </div>
+      </div>
+
+      {/* 2. THE BANNER IMAGE SECTION (TEXT-ER NICHE) */}
+      <div className="relative mt-16 w-full max-w-7xl h-96 rounded-2xl overflow-hidden border border-gray-800 shadow-[0_0_80px_-20px_rgba(168,85,247,0.3)]">
+        {/* Tomar Generated Image-ta "/banner.jpg" name use koro */}
+        <img 
+          src="/banner.jpg" 
+          alt="Obsidian Complexity - Cyber Academic Banner"
+          className="w-full h-full object-cover object-center transition-all duration-700 hover:scale-110" 
+        />
+        {/* Subtle Overlay to make it feel cinematic */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-black/10" />
+      </div>
+
+    </section>
+  );
+} 
         {/* --- MAIN BIO CARD + PICTURE --- */}
         <motion.div 
           variants={item}
