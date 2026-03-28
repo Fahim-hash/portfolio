@@ -556,15 +556,35 @@ const testimonials = [
     </div>
   </div>
 </motion.div>
-{/* --- TESTIMONIALS SECTION --- */}
-<motion.div variants={item} className="md:col-span-4 mt-20 mb-12 px-6">
+{/* --- CLIENT LOVE / TESTIMONIALS SECTION --- */}
+<motion.div variants={item} className="md:col-span-4 mt-20 mb-12 px-6 relative overflow-hidden">
+  
+  {/* --- FLOATING HEARTS AROUND TITLE --- */}
+  <div className="absolute inset-0 flex items-center justify-center -translate-y-32 z-0 pointer-events-none">
+    <div className="relative w-72 h-32">
+      {/* বাম পাশের হার্টগুলো */}
+      <FloatingHeart delay={0} style={{ top: '10%', left: '-10%' }} />
+      <FloatingHeart delay={0.8} style={{ top: '60%', left: '5%' }} />
+      {/* ডান পাশের হার্টগুলো */}
+      <FloatingHeart delay={1.5} style={{ top: '20%', right: '-5%' }} />
+      <FloatingHeart delay={2.2} style={{ top: '70%', right: '0%' }} />
+      {/* মাঝখানে একটু ওপরে */}
+      <FloatingHeart delay={3} style={{ top: '-15%', left: '45%' }} />
+    </div>
+  </div>
+
   <div className="text-center mb-16 relative z-10">
-    <h2 className="text-4xl font-black tracking-tighter text-white">Client <span className="text-indigo-500">Love</span></h2>
-    <p className="text-zinc-500 font-mono text-[10px] mt-1 uppercase tracking-[0.3em]">Interactive Feedback Cloud</p>
+    <h2 className="text-4xl font-black tracking-tighter text-white italic uppercase">
+      Client <span className="text-zinc-600">Love</span>
+    </h2>
+    <p className="text-zinc-500 font-mono text-[10px] mt-2 uppercase tracking-[0.4em]">
+      // Interactive Feedback Cloud
+    </p>
+    <div className="h-1 w-16 bg-indigo-500 mx-auto mt-4 rounded-full opacity-50" />
   </div>
 
   {/* Grid Layout: PC-te 3 column, Tablet-e 2, Mobile-e 1 */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto relative z-10">
     {testimonials.map((t, index) => (
       <motion.div
         key={index}
@@ -583,25 +603,29 @@ const testimonials = [
         }}
         whileHover={{ 
           scale: 1.02, 
-          rotate: index % 2 === 0 ? 1 : -1,
+          rotate: index % 2 === 0 ? 0.5 : -0.5,
           zIndex: 50 
         }}
-        // "Ahiya'r Ammu" ba special card gulo highlight korar jonno logic
-        className={`p-6 bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] shadow-xl cursor-grab active:cursor-grabbing transition-all
-          ${index === 2 ? 'lg:scale-110 border-indigo-500/20 bg-zinc-900/60' : ''}
-          ${index === 6 ? 'lg:col-span-1 border-pink-500/10' : ''}
+        className={`p-8 bg-zinc-900/30 border border-white/5 backdrop-blur-xl rounded-[2.5rem] shadow-2xl cursor-grab active:cursor-grabbing transition-all
+          ${index === 2 ? 'lg:scale-105 border-indigo-500/20 bg-zinc-900/50 shadow-indigo-500/5' : ''}
         `}
       >
-        <p className="text-zinc-300 text-[13px] leading-relaxed mb-4 italic font-medium leading-relaxed">
+        <p className="text-zinc-400 text-[13px] leading-relaxed mb-6 italic font-medium">
           "{t.text}"
         </p>
-        <div className="flex flex-col border-l-2 border-indigo-500/40 pl-4">
-          <span className="text-white font-black text-[10px] uppercase tracking-[0.2em]">
+        
+        <div className="flex flex-col border-l-2 border-indigo-500/40 pl-5">
+          <span className="text-white font-black text-[10px] uppercase tracking-[0.25em]">
             {t.name}
           </span>
-          <span className="text-zinc-500 text-[9px] font-mono mt-0.5">
+          <span className="text-zinc-600 text-[9px] font-mono mt-1 uppercase tracking-wider">
             {t.role}
           </span>
+        </div>
+
+        {/* কার্ডের ভেতরে ছোট্ট ডেকোরেশন */}
+        <div className="absolute top-6 right-8 text-zinc-800 text-4xl font-serif opacity-20 group-hover:opacity-40 transition-opacity">
+          "
         </div>
       </motion.div>
     ))}
