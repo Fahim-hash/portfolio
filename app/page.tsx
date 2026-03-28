@@ -196,55 +196,60 @@ const testimonials = [
   <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
 </motion.div>
 
-{/* --- PREMIUM DESIGN ARSENAL SECTION --- */}
+{/* --- USED SOFTWARE SECTION WITH PROGRESS BARS --- */}
 <motion.div 
   variants={item} 
   className="md:col-span-4 mt-20 mb-8 border border-white/5 bg-zinc-900/20 backdrop-blur-xl rounded-[3rem] p-8 md:p-12 overflow-hidden relative"
 >
-  {/* Background Glow Effect */}
   <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full" />
   
   <div className="relative z-10 mb-12 flex flex-col items-center md:items-start text-center md:text-left">
-    <h2 className="text-4xl md:text-5xl font-black tracking-[calc(-0.05em)] italic uppercase text-white leading-none">
-      Design <span className="text-zinc-600">Arsenal</span>
+    <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic uppercase text-white leading-none">
+      Used <span className="text-zinc-600">Software</span>
     </h2>
     <div className="h-1.5 w-24 bg-indigo-500 mt-4 rounded-full" />
     <p className="text-zinc-500 font-mono text-[10px] tracking-[0.4em] uppercase mt-6">
-      // Industry Standard Toolstack
+      // Technical Expertise & Proficiency
     </p>
   </div>
 
-  {/* Figma removed - Grid adjusted to 5 columns for desktop */}
   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 relative z-10">
     {[
-      { name: "Photoshop", img: "ps.png", color: "hover:shadow-blue-500/10" },
-      { name: "Illustrator", img: "ai.png", color: "hover:shadow-orange-500/10" },
-      { name: "After Effects", img: "ae.png", color: "hover:shadow-purple-500/10" },
-      { name: "Premiere Pro", img: "pr.png", color: "hover:shadow-indigo-500/10" },
-      { name: "Lightroom", img: "lr.png", color: "hover:shadow-cyan-500/10" },
+      { name: "Photoshop", img: "ps.png", level: "92%", color: "bg-blue-500" },
+      { name: "Illustrator", img: "ai.png", level: "90%", color: "bg-orange-500" },
+      { name: "After Effects", img: "ae.png", level: "65%", color: "bg-purple-500" },
+      { name: "Premiere Pro", img: "pr.png", level: "55%", color: "bg-indigo-500" },
+      { name: "Lightroom", img: "lr.png", level: "60%", color: "bg-cyan-500" },
     ].map((skill) => (
       <motion.div
         key={skill.name}
         whileHover={{ scale: 1.05, y: -5 }}
-        className={`group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all duration-500 shadow-xl ${skill.color}`}
+        className="group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all duration-500 shadow-xl"
       >
-        <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        
-        <div className="relative w-12 h-12 mb-5 transition-all duration-500 transform group-hover:scale-110">
+        <div className="relative w-12 h-12 mb-6 transition-all duration-500 transform group-hover:scale-110">
             <img 
-                src={`/logo/${skill.img}`} 
+                src={`/logos/${skill.img}`} 
                 alt={skill.name} 
                 className="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
             />
         </div>
 
-        <span className="text-[9px] font-mono tracking-widest uppercase text-zinc-500 group-hover:text-white transition-all duration-500">
+        <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400 group-hover:text-white transition-all duration-500 mb-4">
           {skill.name}
         </span>
-        
-        {/* Animated Corner Border */}
-        <div className="absolute top-4 right-4 w-2 h-2 border-t border-r border-white/0 group-hover:border-white/40 transition-all duration-500" />
-        <div className="absolute bottom-4 left-4 w-2 h-2 border-b border-l border-white/0 group-hover:border-white/40 transition-all duration-500" />
+
+        {/* --- PROFICIENCY BAR --- */}
+        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden relative">
+            <motion.div 
+                initial={{ width: 0 }}
+                whileInView={{ width: skill.level }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className={`absolute top-0 left-0 h-full ${skill.color} opacity-60 group-hover:opacity-100 transition-opacity`}
+            />
+        </div>
+        <span className="text-[8px] font-mono text-zinc-600 mt-2 group-hover:text-zinc-300 transition-colors">
+            {skill.level} EXPERT
+        </span>
       </motion.div>
     ))}
   </div>
