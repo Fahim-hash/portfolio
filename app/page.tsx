@@ -195,6 +195,47 @@ const testimonials = [
   {/* Background Glow */}
   <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
 </motion.div>
+
+        {/* --- SOFTWARE SKILLS / TOOL STACK SECTION --- */}
+<motion.div 
+  variants={item} 
+  className="md:col-span-4 mt-20 mb-8 border border-zinc-800 bg-zinc-900/30 backdrop-blur-md rounded-[2.5rem] p-10"
+>
+  <div className="mb-10 text-center md:text-left">
+    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl italic uppercase text-white">
+      Design Arsenal
+    </h2>
+    <p className="text-zinc-500 font-mono text-sm mt-2">Tools I use to bring ideas to life</p>
+  </div>
+
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
+    {[
+      { name: "Photoshop", icon: "https://cdn.worldvectorlogo.com/logos/adobe-photoshop-2.svg" },
+      { name: "Illustrator", icon: "https://cdn.worldvectorlogo.com/logos/adobe-illustrator-cc-icon.svg" },
+      { name: "After Effects", icon: "https://cdn.worldvectorlogo.com/logos/after-effects-cc-logo-1.svg" },
+      { name: "Premiere Pro", icon: "https://cdn.worldvectorlogo.com/logos/adobe-premiere-pro-cc-icon.svg" },
+      { name: "Figma", icon: "https://cdn.worldvectorlogo.com/logos/figma-1.svg" },
+      { name: "Lightroom", icon: "https://cdn.worldvectorlogo.com/logos/adobe-lightroom-cc-icon.svg" },
+    ].map((skill) => (
+      <motion.div
+        key={skill.name}
+        whileHover={{ y: -8, transition: { duration: 0.2 } }}
+        className="flex flex-col items-center justify-center p-6 rounded-3xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors group"
+      >
+        <div className="relative w-12 h-12 mb-4 grayscale group-hover:grayscale-0 transition-all duration-300">
+          <img 
+            src={skill.icon} 
+            alt={skill.name} 
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-zinc-500 group-hover:text-white transition-colors">
+          {skill.name}
+        </span>
+      </motion.div>
+    ))}
+  </div>
+</motion.div>
         {/* --- DESIGNS SHOWCASE SECTION (FIXED 10 CARDS - NO GAPS) --- */}
         <motion.div variants={item} className="md:col-span-4 mt-12 mb-6">
           <div className="flex items-end gap-4 mb-8">
