@@ -215,8 +215,8 @@ const testimonials = [
 
   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 relative z-10">
     {[
-      { name: "Photoshop", img: "ps.png", level: "92%", color: "bg-blue-500" },
-      { name: "Illustrator", img: "ai.png", level: "90%", color: "bg-orange-500" },
+      { name: "Photoshop", img: "ps.png", level: "82%", color: "bg-blue-500" },
+      { name: "Illustrator", img: "ai.png", level: "85%", color: "bg-orange-500" },
       { name: "After Effects", img: "ae.png", level: "65%", color: "bg-purple-500" },
       { name: "Premiere Pro", img: "pr.png", level: "55%", color: "bg-indigo-500" },
       { name: "Lightroom", img: "lr.png", level: "60%", color: "bg-cyan-500" },
