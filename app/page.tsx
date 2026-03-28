@@ -8,6 +8,30 @@ import { motion } from 'framer-motion';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { SiBehance } from "react-icons/si";
 
+const FloatingHeart = ({ delay = 0, style = {} }) => (
+  <motion.span
+    initial={{ opacity: 0, y: 10 }}
+    animate={{
+      opacity: [0, 1, 1, 0], 
+      y: [10, -40], 
+      x: [0, 10, -10, 0], 
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        delay: delay,
+        ease: 'easeInOut',
+      },
+    }}
+    className="absolute text-2xl pointer-events-none z-0"
+    style={{
+      color: 'rgba(255, 105, 180, 0.5)', 
+      filter: 'drop-shadow(0 0 5px rgba(255, 105, 180, 0.3))', 
+      ...style, 
+    }}
+  >
+    ❤️
+  </motion.span>
+);
 export default function Portfolio() {
   
   const clientLogos = [
