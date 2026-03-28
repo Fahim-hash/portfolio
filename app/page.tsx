@@ -206,11 +206,11 @@ const testimonials = [
   
   <div className="relative z-10 mb-12 flex flex-col items-center md:items-start text-center md:text-left">
     <h2 className="text-4xl md:text-5xl font-black tracking-[calc(-0.05em)] italic uppercase text-white leading-none">
-      Design <span className="text-zinc-600">Arsenal</span>
+      Used <span className="text-zinc-600">Software</span>
     </h2>
     <div className="h-1.5 w-24 bg-indigo-500 mt-4 rounded-full" />
     <p className="text-zinc-500 font-mono text-[10px] tracking-[0.4em] uppercase mt-6">
-      // Industry Standard Toolstack
+      
     </p>
   </div>
 
