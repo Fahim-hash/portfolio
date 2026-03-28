@@ -196,42 +196,51 @@ const testimonials = [
   <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
 </motion.div>
 
-        {/* --- SOFTWARE SKILLS / TOOL STACK SECTION --- */}
+     {/* --- PREMIUM DESIGN ARSENAL SECTION --- */}
 <motion.div 
   variants={item} 
-  className="md:col-span-4 mt-20 mb-8 border border-zinc-800 bg-zinc-900/30 backdrop-blur-md rounded-[2.5rem] p-10"
+  className="md:col-span-4 mt-20 mb-8 border border-white/5 bg-zinc-900/20 backdrop-blur-xl rounded-[3rem] p-8 md:p-12 overflow-hidden relative"
 >
-  <div className="mb-10 text-center md:text-left">
-    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl italic uppercase text-white">
-      Design Arsenal
+  {/* Background Glow Effect */}
+  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full" />
+  
+  <div className="relative z-10 mb-12 flex flex-col items-center md:items-start text-center md:text-left">
+    <h2 className="text-4xl md:text-5xl font-black tracking-[calc(-0.05em)] italic uppercase text-white leading-none">
+      Design <span className="text-zinc-600">Arsenal</span>
     </h2>
-    <p className="text-zinc-500 font-mono text-sm mt-2">Tools I use to bring ideas to life</p>
+    <div className="h-1 w-20 bg-indigo-500 mt-4 rounded-full" />
+    <p className="text-zinc-500 font-mono text-xs tracking-[0.3em] uppercase mt-6">
+      // Powered by industry standard tools
+    </p>
   </div>
 
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 relative z-10">
     {[
-      { name: "Photoshop", icon: "https://cdn.worldvectorlogo.com/logos/adobe-photoshop-2.svg" },
-      { name: "Illustrator", icon: "https://cdn.worldvectorlogo.com/logos/adobe-illustrator-cc-icon.svg" },
-      { name: "After Effects", icon: "https://cdn.worldvectorlogo.com/logos/after-effects-cc-logo-1.svg" },
-      { name: "Premiere Pro", icon: "https://cdn.worldvectorlogo.com/logos/adobe-premiere-pro-cc-icon.svg" },
-      { name: "Figma", icon: "https://cdn.worldvectorlogo.com/logos/figma-1.svg" },
-      { name: "Lightroom", icon: "https://cdn.worldvectorlogo.com/logos/adobe-lightroom-cc-icon.svg" },
+      { name: "Photoshop", color: "hover:shadow-blue-500/20", icon: <path d="M12.3 12.3c.7-1 1-2.2 1-3.6 0-3.6-2.5-5.2-6.1-5.2H2.8v14.1h3.4V14h1.1c2.1 0 3.8.4 4.3 1.9.4 1 0 1.7-.2 1.9H15c0-.6.1-2.1-2.7-3.5zm-6.1-1.3V6.7h.7c1.7 0 2.8.7 2.8 2.2 0 1.7-1.1 2.1-2.8 2.1h-.7zM18.8 17.6c-1.3 0-2.2-.4-2.8-1.2l-2 1.3c1 1.5 2.5 2 4.6 2 3.6 0 5.2-2 5.2-4.1 0-4.1-5.1-4-5.1-5.9 0-.8.7-1.2 1.6-1.2 1.2 0 2.1.4 2.7 1.1l1.8-1.4c-.9-1.2-2.3-1.8-4.3-1.8-3.3 0-5.1 1.9-5.1 4.1 0 4.2 5.2 4 5.2 6.1-.1 1.1-.9 1.1-1.8 1.1z" fill="currentColor"/> },
+      { name: "Illustrator", color: "hover:shadow-orange-500/20", icon: <path d="M13.4 17.6h-3.3l-1-2.7H5.2l-1 2.7H1L5.9 4.3h2.6l4.9 13.3zm-5-11l-2.4 6.7h4.8l-2.4-6.7zM23 11.2c0-4.2-2.6-6.9-6.3-6.9-3.7 0-6.2 2.7-6.2 6.9 0 4.1 2.5 6.8 6.2 6.8 3.7.1 6.3-2.6 6.3-6.8zm-9.1 0c0-2.3 1.1-3.8 2.8-3.8 1.7 0 2.8 1.5 2.8 3.8 0 2.3-1.1 3.8-2.8 3.8-1.7 0-2.8-1.5-2.8-3.8z" fill="currentColor"/> },
+      { name: "After Effects", color: "hover:shadow-purple-500/20", icon: <path d="M9.1 17.6L8.4 15H3.6l-.7 2.6H0L5.3 4.3H7l5.3 13.3H9.1zm-4.7-5.1h3.3L6.1 6.8l-1.7 5.7zM24 13.5h-7.1v1.3h7.1v2.8H13.4V4.3h10.4V7h-7.1v2.6H24v3.9z" fill="currentColor"/> },
+      { name: "Premiere Pro", color: "hover:shadow-indigo-500/20", icon: <path d="M11 10.3c0-1.7-1.2-2.3-2.8-2.3H5.3v4.6h2.9c1.6 0 2.8-.6 2.8-2.3zm2.5 7.3h-3.4v-4.1H8.2v4.1H5.3V4.3h3.5c3.6 0 5.7 1.6 5.7 5.1s-2.1 5.1-5.7 5.1h-.3v3.1h3.7v-.3zM16.6 7.6h2.9V11c0 1.2.6 1.5 1.7 1.5h1.2v3h-1.5c-2.4 0-4.3-.8-4.3-3.6V7.6z" fill="currentColor"/> },
+      { name: "Figma", color: "hover:shadow-pink-500/20", icon: <path d="M12 24c3.314 0 6-2.686 6-6v-6h-6c-3.314 0-6 2.686-6 6s2.686 6 6 6zM6 12c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6zM18 6V0h-6c-3.314 0-6 2.686-6 6s2.686 6 6 6h6c3.314 0 6-2.686 6-6s-2.686-6-6-6z" fill="currentColor"/> },
+      { name: "Lightroom", color: "hover:shadow-cyan-500/20", icon: <path d="M11.6 17.6H2.9V4.3h3.4v10.3h5.3v3zM15 7.6h2.9V11c0 1.2.6 1.5 1.7 1.5h1.2v3H19.3c-2.4 0-4.3-.8-4.3-3.6V7.6z" fill="currentColor"/> },
     ].map((skill) => (
       <motion.div
         key={skill.name}
-        whileHover={{ y: -8, transition: { duration: 0.2 } }}
-        className="flex flex-col items-center justify-center p-6 rounded-3xl border border-white/5 bg-white/5 hover:bg-white/10 transition-colors group"
+        whileHover={{ scale: 1.05, y: -5 }}
+        className={`group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.03] backdrop-blur-md transition-all duration-500 shadow-xl ${skill.color}`}
       >
-        <div className="relative w-12 h-12 mb-4 grayscale group-hover:grayscale-0 transition-all duration-300">
-          <img 
-            src={skill.icon} 
-            alt={skill.name} 
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-zinc-500 group-hover:text-white transition-colors">
+        <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        
+        <svg viewBox="0 0 24 24" className="w-10 h-10 text-zinc-600 group-hover:text-white transition-all duration-500 transform group-hover:scale-110 mb-4">
+          {skill.icon}
+        </svg>
+
+        <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-500 group-hover:text-white group-hover:letter-spacing-lg transition-all duration-500">
           {skill.name}
         </span>
+        
+        {/* Animated Corner Border */}
+        <div className="absolute top-4 right-4 w-2 h-2 border-t border-r border-white/0 group-hover:border-white/40 transition-all duration-500" />
+        <div className="absolute bottom-4 left-4 w-2 h-2 border-b border-l border-white/0 group-hover:border-white/40 transition-all duration-500" />
       </motion.div>
     ))}
   </div>
