@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Syed Fahim Muddasir",
-    description: "Creative Lead & Full-stack Developer",
+    description: "Creative Lead",
     url: "https://syedfahimmuddasir.bro.bd",
-    siteName: "Syed Fahim Portfolio",
+    siteName: "Fahim's Portfolio",
     locale: "en_US",
     type: "website",
   },
@@ -43,17 +43,17 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Syed Fahim Muddasir",
-    "alternateName": "Syed Fahim",
+    "alternateName": "Syed Fahim Muddasir",
     "url": "https://syedfahimmuddasir.bro.bd",
     "jobTitle": "Media Department Lead",
     "worksFor": {
       "@type": "Organization",
-      "name": "Ta'tuf Foundation (ODF)"
+      "name": "Ta'tuf Foundation "
     },
-    "knowsAbout": ["Graphic Design", "Web Development", "Cinematic Branding", "Python Automation"],
+    "knowsAbout": ["Graphic Design", "Cinematic Branding"],
     "sameAs": [
-      "https://www.facebook.com/your-profile", // Tomar FB link dao
-      "https://github.com/your-username"      // Tomar GitHub link dao
+      "https://www.facebook.com/syedfahim.muddasir", // Tomar FB link dao
+           // Tomar GitHub link dao
     ]
   };
 
