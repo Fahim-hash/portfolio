@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 
 // 🚀 SEO & Metadata Setup
 export const metadata: Metadata = {
-  title: "Syed Fahim Muddasir | Creative Designer & Web Developer",
-  description: "Official portfolio of Syed Fahim Muddasir. Media Department Lead at Ta'tuf Foundation (ODF) and Founder of RelaxStudio. Specialized in cinematic visual identities and automated digital tools.",
-  keywords: ["Syed Fahim Muddasir", "Creative Designer Dhaka", "Next.js Developer Bangladesh", "RelaxStudio Founder", "ODF Media Lead", "WLFSC Topper"],
+  title: "Syed Fahim Muddasir | Creative Designer",
+  description: "Official Portfolio of Syed Fahim Muddasir. Media Department Lead at Ta'tuf Foundation and Founder of RelaxStudio. Specialized in cinematic visual identities.",
+  keywords: ["Syed Fahim Muddasir", "Creative Designer Dhaka", "RelaxStudio Founder", "ODF Media Lead", "WLFSC Topper"],
   authors: [{ name: "Syed Fahim Muddasir" }],
   icons: {
     icon: "/icon.png", // Tomar personal icon file-er nam exact eita rakho
