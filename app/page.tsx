@@ -232,7 +232,7 @@ const testimonials = [
         
         <div className="relative w-12 h-12 mb-5 transition-all duration-500 transform group-hover:scale-110">
             <img 
-                src={`/logo/${skill.img}`} 
+                src={`/logos/${skill.img}`} 
                 alt={skill.name} 
                 className="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
             />
