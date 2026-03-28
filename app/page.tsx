@@ -196,15 +196,16 @@ const testimonials = [
   <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
 </motion.div>
 
-   {/* --- PREMIUM DESIGN ARSENAL SECTION --- */}
+{/* --- PREMIUM DESIGN ARSENAL SECTION --- */}
 <motion.div 
   variants={item} 
   className="md:col-span-4 mt-20 mb-8 border border-white/5 bg-zinc-900/20 backdrop-blur-xl rounded-[3rem] p-8 md:p-12 overflow-hidden relative"
 >
+  {/* Background Glow Effect */}
   <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full" />
   
   <div className="relative z-10 mb-12 flex flex-col items-center md:items-start text-center md:text-left">
-    <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic uppercase text-white leading-none">
+    <h2 className="text-4xl md:text-5xl font-black tracking-[calc(-0.05em)] italic uppercase text-white leading-none">
       Design <span className="text-zinc-600">Arsenal</span>
     </h2>
     <div className="h-1.5 w-24 bg-indigo-500 mt-4 rounded-full" />
@@ -213,33 +214,37 @@ const testimonials = [
     </p>
   </div>
 
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 relative z-10">
+  {/* Figma removed - Grid adjusted to 5 columns for desktop */}
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 relative z-10">
     {[
-      { name: "Photoshop", color: "group-hover:text-[#31A8FF]", icon: "M0 .3v23.4h24V.3H0zm8.3 15.1c0 1.1-.3 2-1 2.6-.7.6-1.7.9-2.9.9H3.1v-9.1h1.7c1.3 0 2.3.3 3 .8.7.5 1 1.3 1 2.3v2.5zm11.7.2c0 1.2-.4 2.1-1.1 2.8-.8.6-1.8 1-3.2 1-1.2 0-2.2-.2-2.9-.7-.7-.4-1.2-1.1-1.5-2l1.5-.7c.2.6.5 1.1.9 1.4.4.3 1 .4 1.7.4 1.7 0 2.5-.8 2.5-2.5 0-.7-.2-1.2-.5-1.5-.3-.3-.9-.6-1.7-.9-1.2-.4-2-.8-2.5-1.3-.5-.5-.7-1.2-.7-2.1 0-1 .4-1.9 1.1-2.5.7-.6 1.7-.9 3-.9 1.1 0 1.9.2 2.6.6.6.4 1.1.9 1.3 1.6l-1.4.7c-.2-.4-.4-.7-.7-1-.3-.2-.8-.4-1.4-.4-1.5 0-2.3.7-2.3 2 0 .6.2 1.1.5 1.4s1 .6 1.9 1c1 .3 1.8.7 2.3 1.2.5.5.8 1.2.8 2.2zm-12.2-5.7H4.6v2.3h1.3c.6 0 1.1-.1 1.4-.4s.5-.7.5-1.2v-.7z" },
-      { name: "Illustrator", color: "group-hover:text-[#FF9A00]", icon: "M0 .3v23.4h24V.3H0zm8.1 16.1l-.8 1.6H5.8l3.6-7.8h1.4l3.6 7.8h-1.5l-.8-1.6H8.1zm10.7.2c-.4.5-1 .8-1.7 1-1 .3-2 .3-2.9.1-.8-.2-1.5-.7-2-1.3-.5-.7-.8-1.6-.8-2.7s.3-2 .8-2.7c.5-.6 1.2-1.1 2-1.3.9-.2 1.9-.2 2.9.1.7.2 1.3.5 1.7 1l-.9 1.1c-.3-.4-.7-.6-1.2-.7-.7-.2-1.4-.2-2.1 0-.6.1-1.1.5-1.5.9-.4.5-.6 1.1-.6 1.9s.2 1.4.6 1.9c.4.4.9.8 1.5.9.7.2 1.4.2 2.1 0 .5-.1.9-.3 1.2-.7l.9 1.1zm-3.6-4.6h.4l-1.5-3.3-1.5 3.3h2.6z" },
-      { name: "After Effects", color: "group-hover:text-[#D191FF]", icon: "M0 .3v23.4h24V.3H0zm8.3 16.1l-.8 1.6H6l3.6-7.8h1.4l3.6 7.8h-1.5l-.8-1.6H8.3zm12.3-1.6h-3.9v1.3h3.9v1.6h-5.6V8.7h5.4v1.6h-3.7v1.4h3.9v1.6zm-11-2.9h.4l-1.5-3.3-1.5 3.3h2.6z" },
-      { name: "Premiere Pro", color: "group-hover:text-[#EA77FF]", icon: "M0 .3v23.4h24V.3H0zm9.3 14c0 1.1-.3 2-1 2.6-.7.6-1.7.9-2.9.9H3.8V8.7h1.7c1.3 0 2.3.3 3 .8.7.5 1 1.3 1 2.3v2.2zm10.7-5.3h-1.7v1.7h-1.7V8.7h3.4v5.3zm-1.7 1.7v7.3H15v-7.3h1.6zm-12.7.9H5.5v2.3h1.3c.6 0 1.1-.1 1.4-.4s.5-.7.5-1.2v-.7z" },
-      { name: "Figma", color: "group-hover:text-[#F24E1E]", icon: "M12 24c3.314 0 6-2.686 6-6v-6h-6c-3.314 0-6 2.686-6 6s2.686 6 6 6zM6 12c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6zM18 6V0h-6c-3.314 0-6 2.686-6 6s2.686 6 6 6h6c3.314 0 6-2.686 6-6s-2.686-6-6-6z" },
-      { name: "Lightroom", color: "group-hover:text-[#31A8FF]", icon: "M0 .3v23.4h24V.3H0zM10 17.7H3.9V8.7h1.6v7.4H10v1.6zm10.2-9h-1.7v1.7h-1.7V8.7h3.4v5.3zm-1.7 1.7v7.3H17v-7.3h1.5z" },
+      { name: "Photoshop", img: "ps.png", color: "hover:shadow-blue-500/10" },
+      { name: "Illustrator", img: "ai.png", color: "hover:shadow-orange-500/10" },
+      { name: "After Effects", img: "ae.png", color: "hover:shadow-purple-500/10" },
+      { name: "Premiere Pro", img: "pr.png", color: "hover:shadow-indigo-500/10" },
+      { name: "Lightroom", img: "lr.png", color: "hover:shadow-cyan-500/10" },
     ].map((skill) => (
       <motion.div
         key={skill.name}
-        whileHover={{ scale: 1.02, y: -5 }}
-        className="group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all duration-500 shadow-xl"
+        whileHover={{ scale: 1.05, y: -5 }}
+        className={`group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all duration-500 shadow-xl ${skill.color}`}
       >
-        <svg 
-          viewBox="0 0 24 24" 
-          className={`w-12 h-12 text-zinc-700 transition-all duration-500 transform group-hover:scale-110 mb-5 ${skill.color}`}
-        >
-          <path d={skill.icon} fill="currentColor"/>
-        </svg>
+        <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        
+        <div className="relative w-12 h-12 mb-5 transition-all duration-500 transform group-hover:scale-110">
+            <img 
+                src={`/logo/${skill.img}`} 
+                alt={skill.name} 
+                className="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
+            />
+        </div>
 
         <span className="text-[9px] font-mono tracking-widest uppercase text-zinc-500 group-hover:text-white transition-all duration-500">
           {skill.name}
         </span>
         
-        {/* Subtle hover indicator */}
-        <div className="absolute bottom-4 w-1 h-1 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* Animated Corner Border */}
+        <div className="absolute top-4 right-4 w-2 h-2 border-t border-r border-white/0 group-hover:border-white/40 transition-all duration-500" />
+        <div className="absolute bottom-4 left-4 w-2 h-2 border-b border-l border-white/0 group-hover:border-white/40 transition-all duration-500" />
       </motion.div>
     ))}
   </div>
