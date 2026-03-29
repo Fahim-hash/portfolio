@@ -52,7 +52,7 @@ export default function BirthdayVault() {
             <div className="p-6 border border-zinc-900 bg-zinc-900/40 rounded-3xl">
               <span className="text-[10px] text-indigo-500 uppercase tracking-widest">Special Project</span>
               <h3 className="text-white mt-2">The Gift of Code</h3>
-              <a href="https://github.com/..." className="text-xs text-zinc-500 underline mt-2 block hover:text-white">View Repository</a>
+              <a href="https://github.com/pinakkk/website-for-girlfriend" className="text-xs text-zinc-500 underline mt-2 block hover:text-white">View Repository</a>
             </div>
           </motion.div>
         )}
