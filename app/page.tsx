@@ -220,6 +220,7 @@ const testimonials = [
       { name: "After Effects", img: "ae.png", level: "65%", color: "bg-purple-500" },
       { name: "Premiere Pro", img: "pr.png", level: "55%", color: "bg-indigo-500" },
       { name: "Lightroom", img: "lr.png", level: "60%", color: "bg-cyan-500" },
+      { name: "Davinci Resolve", img: "DaVinci_Resolve_Studio.png", level: "40%", color: "bg-blue-500" },
     ].map((skill) => (
       <motion.div
         key={skill.name}
