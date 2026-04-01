@@ -106,8 +106,9 @@ const testimonials = [
             {/* Big Name Section */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3>
+               <h6 className="text-red-600 uppercase text-sm tracking-[0.3em] font-black animate-pulse"> Currently in a Break </h6>
               </div>
               
               <h1 className="text-7xl md:text-7xl font-black tracking-tighter leading-[0.9]">
