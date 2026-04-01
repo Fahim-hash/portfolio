@@ -14,7 +14,65 @@ export default function Portfolio() {
   useEffect(() => {
     // 1.5 second por popup asbe
     const timer = setTimeout(() => setShowPopup(true), 1500);
-    return (<main className="relative min-h-screen bg-black overflow-x-hidden">
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const clientLogos = [
+  { name: "TongErKhobor", src: "/logos/tongerkhobor.png", url: "https://www.instagram.com/tongerkhobor" },
+  { name: "General Science Olympiad", src: "/logos/sciencebaze.png", url: "https://www.facebook.com/generalscienceolympiad" },
+  { name: "Ta'atuf Foundation", src: "/logos/taatuf.png", url: "https://www.facebook.com/taatuf.foundation" },
+  { name: "Willes Literary Club", src: "/logos/vb.png", url: "https://www.facebook.com/profile.php?id=61560572355031" },
+  { name: "RelaxStudio", src: "/logos/relax.png", url: "https://www.instagram.com/relaxstudio__" },
+  { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
+];
+
+const testimonials = [
+  { name: "Arifur Rahman Tahmid", text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", role: "President, Willes Literary Club (GEN-2)" },
+  { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
+  { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
+  { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
+  { name: "Md Ashraful Islam", text: "Fahim is a remarkable addition to our foundation. He thinks beyond aesthetics, optimizing processes while delivering creative excellence. His growth has been steady and his impact on our visual identity is undeniable. A truly promising creative leader.", role: "Founder & President, Ta'atuf Foundation" }
+];
+  // --- STATES ---
+  const [selectedVideo, setSelectedVideo] = useState<{src: string, title: string, tag: string} | null>(null);
+
+  // Staggered entrance animation variants
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+    }
+  };
+
+  const item = {
+    hidden: { y: 30, opacity: 0 },
+    show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
+  };
+
+  // Hover animation for social icon cards
+  const iconCardHover = {
+    rest: { scale: 1, y: 0, backgroundColor: "rgba(24, 24, 27, 0.5)" }, // zinc-900/50
+    hover: { 
+      scale: 1.05, 
+      y: -5,
+      backgroundColor: "rgba(79, 70, 229, 0.1)", // indigo-600/10
+      transition: { duration: 0.2, ease: "easeInOut" }
+    }
+  };
+
+  const socialLinks = [
+    { name: "Facebook", icon: FaFacebookF, url: "https://www.facebook.com/syedfahim.muddasir/", color: "hover:text-[#1877F2]" },
+    { name: "Instagram", icon: FaInstagram, url: "https://instagram.com/mr_relax_bro", color: "hover:text-[#E4405F]" },
+    { name: "Behance", icon: SiBehance, url: "https://www.behance.net/fahimmuddasir", color: "hover:text-[#0057ff]" },
+    { name: "WhatsApp", icon: FaWhatsapp, url: "https://wa.me/01855941177", color: "hover:text-[#25D366]" },
+    { name: "LinkedIn", icon: FaLinkedinIn, url: "https://linkedin.com", color: "hover:text-[#0077B5]" },
+    { name: "X (Twitter)", icon: FaXTwitter, url: "https://x.com/", color: "hover:text-white" },
+  ];
+
+  return (
+
+    <main className="relative min-h-screen bg-black overflow-x-hidden">
       
       {/* 1. Tomar existing content guloke ei div diye wrap koro */}
       <div className={`transition-all duration-1000 ${showPopup ? "blur-md opacity-40 pointer-events-none" : "blur-0 opacity-100"}`}>
@@ -72,63 +130,8 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
       
-    </main>) => clearTimeout(timer);
-  }, []);
-  
-  const clientLogos = [
-  { name: "TongErKhobor", src: "/logos/tongerkhobor.png", url: "https://www.instagram.com/tongerkhobor" },
-  { name: "General Science Olympiad", src: "/logos/sciencebaze.png", url: "https://www.facebook.com/generalscienceolympiad" },
-  { name: "Ta'atuf Foundation", src: "/logos/taatuf.png", url: "https://www.facebook.com/taatuf.foundation" },
-  { name: "Willes Literary Club", src: "/logos/vb.png", url: "https://www.facebook.com/profile.php?id=61560572355031" },
-  { name: "RelaxStudio", src: "/logos/relax.png", url: "https://www.instagram.com/relaxstudio__" },
-  { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
-];
-
-const testimonials = [
-  { name: "Arifur Rahman Tahmid", text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", role: "President, Willes Literary Club (GEN-2)" },
-  { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
-  { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
-  { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
-  { name: "Md Ashraful Islam", text: "Fahim is a remarkable addition to our foundation. He thinks beyond aesthetics, optimizing processes while delivering creative excellence. His growth has been steady and his impact on our visual identity is undeniable. A truly promising creative leader.", role: "Founder & President, Ta'atuf Foundation" }
-];
-  // --- STATES ---
-  const [selectedVideo, setSelectedVideo] = useState<{src: string, title: string, tag: string} | null>(null);
-
-  // Staggered entrance animation variants
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.3 }
-    }
-  };
-
-  const item = {
-    hidden: { y: 30, opacity: 0 },
-    show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
-  };
-
-  // Hover animation for social icon cards
-  const iconCardHover = {
-    rest: { scale: 1, y: 0, backgroundColor: "rgba(24, 24, 27, 0.5)" }, // zinc-900/50
-    hover: { 
-      scale: 1.05, 
-      y: -5,
-      backgroundColor: "rgba(79, 70, 229, 0.1)", // indigo-600/10
-      transition: { duration: 0.2, ease: "easeInOut" }
-    }
-  };
-
-  const socialLinks = [
-    { name: "Facebook", icon: FaFacebookF, url: "https://www.facebook.com/syedfahim.muddasir/", color: "hover:text-[#1877F2]" },
-    { name: "Instagram", icon: FaInstagram, url: "https://instagram.com/mr_relax_bro", color: "hover:text-[#E4405F]" },
-    { name: "Behance", icon: SiBehance, url: "https://www.behance.net/fahimmuddasir", color: "hover:text-[#0057ff]" },
-    { name: "WhatsApp", icon: FaWhatsapp, url: "https://wa.me/01855941177", color: "hover:text-[#25D366]" },
-    { name: "LinkedIn", icon: FaLinkedinIn, url: "https://linkedin.com", color: "hover:text-[#0077B5]" },
-    { name: "X (Twitter)", icon: FaXTwitter, url: "https://x.com/", color: "hover:text-white" },
-  ];
-
-  return (
+    </main>
+    
     <main className="min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30">
       
       {/* Background Decorative Glows */}
