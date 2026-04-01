@@ -72,21 +72,30 @@ const testimonials = [
 
   return (
 
-  
-
-    
-    <main className="min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30">
-
-         
-      {/* 1. Tomar existing content guloke ei div diye wrap koro */}
-      <div className={`transition-all duration-1000 ${showPopup ? "blur-md opacity-40 pointer-events-none" : "blur-0 opacity-100"}`}>
-        <Hero />
-        <Featured />
-        <About />
-        <Footer />
+  <main className="relative min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
+      
+      {/* 1. Background Decorative Glows - Main-er bhetore thakle safe */}
+      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 blur-[130px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[130px] rounded-full" />
       </div>
 
-      {/* 2. Eita holo tomake deya shudhumatro Popup er code */}
+      {/* 2. Main Content Wrapper with Blur effect */}
+      <div className={`transition-all duration-1000 ${showPopup ? "blur-md opacity-40 pointer-events-none" : "blur-0 opacity-100"}`}>
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
+        >
+           <Hero />
+           <Featured />
+           <About />
+           <Footer />
+        </motion.div>
+      </div>
+
+      {/* 3. Popup Overlay */}
       <AnimatePresence>
         {showPopup && (
           <div className="fixed inset-0 z-[999] flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]">
@@ -97,57 +106,32 @@ const testimonials = [
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="max-w-md w-full bg-[#0a0a0a] border border-zinc-800/50 p-10 rounded-[3rem] shadow-[0_0_80px_rgba(0,0,0,1)] text-center relative overflow-hidden"
             >
+              {/* ... Popup content ... */}
               <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
               
-              <div className="flex justify-center mb-6">
-                 <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/5 border border-amber-500/20 rounded-full">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_10px_#f59e0b]" />
-                    <span className="text-[9px] font-mono text-amber-500 uppercase tracking-[0.3em]">Status: On Hiatus</span>
-                 </div>
-              </div>
-
-              <h2 className="text-white text-3xl font-black italic tracking-tighter mb-4 leading-tight">
-                TEMPORARY <span className="text-indigo-500">PAUSE</span>
+              <h2 className="text-white text-3xl font-black italic tracking-tighter mb-4 uppercase">
+                Temporary <span className="text-indigo-500">Pause</span>
               </h2>
 
-              <p className="text-zinc-500 text-sm leading-relaxed mb-10 font-medium">
+              <p className="text-zinc-500 text-sm mb-10">
                 I am currently focused on my **HSC '26 Board Examinations**. 
-                You can still browse my work below, but please note that I’ll be back for collaborations in July 2026.
+                Back in July 2026.
               </p>
 
-              <div className="space-y-4">
-                <motion.button
-                  whileHover={{ scale: 1.02, backgroundColor: "#6366f1", color: "#fff" }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowPopup(false)}
-                  className="w-full py-4 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[10px] rounded-full transition-all duration-300"
-                >
-                  Enter Portfolio
-                </motion.button>
-                
-                <div className="text-[8px] text-zinc-700 font-mono tracking-[0.4em] uppercase">
-                   // Accessing Archive_Log_2026
-                </div>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.02, backgroundColor: "#6366f1", color: "#fff" }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowPopup(false)}
+                className="w-full py-4 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[10px] rounded-full"
+              >
+                Enter Portfolio
+              </motion.button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
       
     </main>
-      
-      {/* Background Decorative Glows */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 blur-[130px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[130px] rounded-full" />
-      </div>
-
-      <motion.div 
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
-      >
         
         {/* --- MAIN BIO CARD + PICTURE --- */}
         <motion.div 
