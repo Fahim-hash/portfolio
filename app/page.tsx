@@ -1,23 +1,34 @@
 "use client";
+
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-// New Social Icons
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
-import { SiBehance } from "react-icons/si";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { 
+  ArrowUpRight, 
+  Mail, 
+  ExternalLink, 
+  ChevronRight, 
+  Play, 
+  CheckCircle2, 
+  Download,
+  Menu,
+  X,
+  Plus
+} from "lucide-react";
+import { 
+  FaFacebookF, 
+  FaInstagram, 
+  FaLinkedinIn, 
+  FaWhatsapp, 
+  FaXTwitter, 
+  FaGithub,
+  FaYoutube
+} from "react-icons/fa6";
+import { SiBehance, SiAdobephotoshop, SiAdobeillustrator, SiAdobeaftereffects, SiAdobepremierepro, SiAdobelightroom } from "react-icons/si";
 
-export default function Portfolio() {
+// --- DATA ARRAYS ---
 
-  const [showPopup, setShowPopup] = useState(false);
-
-  useEffect(() => {
-    // 1.5 second por popup asbe
-    const timer = setTimeout(() => setShowPopup(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
-  
-  const clientLogos = [
+const clientLogos = [
   { name: "TongErKhobor", src: "/logos/tongerkhobor.png", url: "https://www.instagram.com/tongerkhobor" },
   { name: "General Science Olympiad", src: "/logos/sciencebaze.png", url: "https://www.facebook.com/generalscienceolympiad" },
   { name: "Ta'atuf Foundation", src: "/logos/taatuf.png", url: "https://www.facebook.com/taatuf.foundation" },
@@ -26,18 +37,71 @@ export default function Portfolio() {
   { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
 ];
 
-const testimonials = [
-  { name: "Arifur Rahman Tahmid", text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", role: "President, Willes Literary Club (GEN-2)" },
-  { name: "Mohammad Nasir", text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", role: "ScienceBaze" },
-  { name: "Shamiul Haque Saad", text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.  With time and experience, he can develop into a very strong and creative designer.", role: "CEO, TongErKhobor" },
-  { name: "Ahiya'r Ammu", text: "Cinematic grading er baap protita poster e akta alada vibe thake .amr onek valo lagse sob gula ,onek sundor kore banano hoise", role: "Friend" },
-  { name: "Md Ashraful Islam", text: "Fahim is a remarkable addition to our foundation. He thinks beyond aesthetics, optimizing processes while delivering creative excellence. His growth has been steady and his impact on our visual identity is undeniable. A truly promising creative leader.", role: "Founder & President, Ta'atuf Foundation" }
+const skills = [
+  { name: "Photoshop", icon: SiAdobephotoshop, level: "82%", color: "text-blue-500", bg: "bg-blue-500/10" },
+  { name: "Illustrator", icon: SiAdobeillustrator, level: "85%", color: "text-orange-500", bg: "bg-orange-500/10" },
+  { name: "After Effects", icon: SiAdobeaftereffects, level: "65%", color: "text-purple-500", bg: "bg-purple-500/10" },
+  { name: "Premiere Pro", icon: SiAdobepremierepro, level: "55%", color: "text-indigo-500", bg: "bg-indigo-500/10" },
+  { name: "Lightroom", icon: SiAdobelightroom, level: "60%", color: "text-cyan-500", bg: "bg-cyan-500/10" },
+  { name: "Visual Identity", icon: CheckCircle2, level: "90%", color: "text-green-500", bg: "bg-green-500/10" },
 ];
-  // --- STATES ---
-  const [selectedVideo, setSelectedVideo] = useState<{src: string, title: string, tag: string} | null>(null);
 
-  // Staggered entrance animation variants
-  const container = {
+const testimonials = [
+  { 
+    name: "Arifur Rahman Tahmid", 
+    text: "Unar sathe kaaj kora khubi interesting cz unar working experience er karone day by day new kichu shikha jay and shobcheye boro kotha unar kaajer idea onk..and ekjon designer er jonno eta onk boro advantage.", 
+    role: "President, Willes Literary Club (GEN-2)",
+    img: "/clients/tahmid.jpg"
+  },
+  { 
+    name: "Mohammad Nasir", 
+    text: "What stands out about Fahim is his unique blend of design sense and technical automation. He doesn’t just design; he optimizes workflows. His contributions to our media strategy have been both innovative and impactful", 
+    role: "ScienceBaze",
+    img: "/clients/nasir.jpg"
+  },
+  { 
+    name: "Shamiul Haque Saad", 
+    text: "Fahim’s designs are clean, creative, and improving consistently. He has demonstrated good potential and dedication in his work.", 
+    role: "CEO, TongErKhobor",
+    img: "/clients/saad.jpg"
+  },
+  { 
+    name: "Md Ashraful Islam", 
+    text: "Fahim is a remarkable addition to our foundation. He thinks beyond aesthetics, optimizing processes while delivering creative excellence.", 
+    role: "Founder & President, Ta'atuf Foundation",
+    img: "/clients/ashraf.jpg"
+  }
+];
+
+const projects = [
+  { id: 1, title: "Study Tour Branding", category: "Event Identity", src: "/designs/work5.png", wide: true },
+  { id: 2, title: "26 March Poster", category: "Manipulation", src: "/designs/work1.png", wide: false },
+  { id: 3, title: "Executive Panel", category: "Corporate", src: "/designs/work3.png", wide: false },
+  { id: 4, title: "Member Recruitment", category: "Social Media", src: "/designs/Artboard 1.png", wide: false },
+  { id: 5, title: "Eid Mubarak Post", category: "Typography", src: "/designs/eid.png", tall: true },
+  { id: 6, title: "Banner Design", category: "Print Media", src: "/designs/banner.png", wide: true },
+  { id: 7, title: "Poet Birthday", category: "Creative", src: "/designs/work7.png", wide: false },
+  { id: 8, title: "Mourn Post", category: "Minimalism", src: "/designs/work8.png", wide: false },
+  { id: 9, title: "T-Shirt Design", category: "Apparel", src: "/designs/work10.png", wide: false },
+  { id: 10, title: "Identity Reveal", category: "Motion Graphics", src: "/designs/work2.jpg", wide: true },
+];
+
+export default function CompletePortfolio() {
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<{ src: string, title: string, tag: string } | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const scrollRef = useRef(null);
+
+  const { scrollYProgress } = useScroll();
+  const scaleProgress = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPopup(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Animation Variants
+  const staggerContainer = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -45,669 +109,415 @@ const testimonials = [
     }
   };
 
-  const item = {
-    hidden: { y: 30, opacity: 0 },
-    show: { y: 0, opacity: 1, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
+  const fadeInUp = {
+    hidden: { y: 40, opacity: 0 },
+    show: { y: 0, opacity: 1, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
   };
-
-  // Hover animation for social icon cards
-  const iconCardHover = {
-    rest: { scale: 1, y: 0, backgroundColor: "rgba(24, 24, 27, 0.5)" }, // zinc-900/50
-    hover: { 
-      scale: 1.05, 
-      y: -5,
-      backgroundColor: "rgba(79, 70, 229, 0.1)", // indigo-600/10
-      transition: { duration: 0.2, ease: "easeInOut" }
-    }
-  };
-
-  const socialLinks = [
-    { name: "Facebook", icon: FaFacebookF, url: "https://www.facebook.com/syedfahim.muddasir/", color: "hover:text-[#1877F2]" },
-    { name: "Instagram", icon: FaInstagram, url: "https://instagram.com/mr_relax_bro", color: "hover:text-[#E4405F]" },
-    { name: "Behance", icon: SiBehance, url: "https://www.behance.net/fahimmuddasir", color: "hover:text-[#0057ff]" },
-    { name: "WhatsApp", icon: FaWhatsapp, url: "https://wa.me/01855941177", color: "hover:text-[#25D366]" },
-    { name: "LinkedIn", icon: FaLinkedinIn, url: "https://linkedin.com", color: "hover:text-[#0077B5]" },
-    { name: "X (Twitter)", icon: FaXTwitter, url: "https://x.com/", color: "hover:text-white" },
-  ];
 
   return (
-
-  <main className="relative min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
+    <div ref={scrollRef} className="bg-[#050505] text-white selection:bg-indigo-500/30 selection:text-white">
       
-      {/* 1. Background Decorative Glows - Main-er bhetore thakle safe */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 blur-[130px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[130px] rounded-full" />
-      </div>
+      {/* --- FLOATING NAVIGATION --- */}
+      <nav className="fixed top-0 left-0 w-full z-[100] px-6 py-8">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 group cursor-pointer"
+          >
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-black group-hover:rotate-12 transition-transform">R</div>
+            <span className="text-xl font-black tracking-tighter uppercase">Relax<span className="text-indigo-500">Studio</span></span>
+          </motion.div>
 
-      {/* 2. Main Content Wrapper with Blur effect */}
-      <div className={`transition-all duration-1000 ${showPopup ? "blur-md opacity-40 pointer-events-none" : "blur-0 opacity-100"}`}>
+          <div className="hidden md:flex items-center gap-8 bg-zinc-900/50 backdrop-blur-md border border-zinc-800/50 px-8 py-4 rounded-full">
+            {["Work", "Expertise", "Testimonials", "Contact"].map((link) => (
+              <a key={link} href={`#${link.toLowerCase()}`} className="text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors">{link}</a>
+            ))}
+          </div>
+
+          <motion.button 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-white text-black px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest hover:bg-indigo-500 hover:text-white transition-all"
+          >
+            Let's Talk
+          </motion.button>
+        </div>
+      </nav>
+
+      {/* --- HERO SECTION --- */}
+      <section className="relative min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 left-0 w-full h-full -z-10">
+          <div className="absolute top-[20%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/10 blur-[120px] rounded-full" />
+          <div className="absolute bottom-[20%] right-[-10%] w-[600px] h-[600px] bg-purple-600/10 blur-[120px] rounded-full" />
+        </div>
+
         <motion.div 
-          variants={container}
+          variants={staggerContainer}
           initial="hidden"
           animate="show"
-          className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
+          className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center"
         >
-           <Hero />
-           <Featured />
-           <About />
-           <Footer />
-        </motion.div>
-      </div>
+          <div className="md:col-span-7">
+            <motion.div variants={fadeInUp} className="inline-flex items-center gap-3 bg-zinc-900/80 border border-zinc-800 px-4 py-2 rounded-full mb-8">
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Available for 2026 Projects</span>
+            </motion.div>
+            
+            <motion.h1 variants={fadeInUp} className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85] mb-8">
+              CRAFTING<br />
+              <span className="text-zinc-700">VISUAL</span><br />
+              IDENTITY.
+            </motion.h1>
+            
+            <motion.p variants={fadeInUp} className="text-xl text-zinc-400 max-w-lg leading-relaxed mb-10 font-medium">
+              Based in Dhaka, I specialize in advanced manipulation, cinematic grading, and building digital brands that stand out.
+            </motion.p>
 
-      {/* 3. Popup Overlay */}
+            <motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
+              <button className="px-10 py-5 bg-indigo-600 hover:bg-indigo-500 rounded-full font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all">
+                View Showcase <ArrowUpRight className="w-4 h-4" />
+              </button>
+              <button className="px-10 py-5 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 rounded-full font-black uppercase tracking-widest text-xs transition-all">
+                The Process
+              </button>
+            </motion.div>
+          </div>
+
+          <div className="md:col-span-5 relative">
+            <motion.div 
+              variants={fadeInUp}
+              className="relative aspect-square md:aspect-[4/5] rounded-[4rem] overflow-hidden border border-zinc-800 group shadow-2xl"
+            >
+              <Image 
+                src="/profile.jpg" 
+                alt="Profile" 
+                fill 
+                className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+              <div className="absolute bottom-10 left-10">
+                <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">// Syed Fahim Muddasir</p>
+                <h2 className="text-3xl font-black italic uppercase">Creative Lead</h2>
+              </div>
+            </motion.div>
+            
+            {/* Stats Badge */}
+            <motion.div 
+              initial={{ scale: 0, rotate: -20 }}
+              animate={{ scale: 1, rotate: -12 }}
+              transition={{ delay: 1, type: "spring" }}
+              className="absolute -top-6 -right-6 w-32 h-32 bg-white text-black rounded-full flex flex-col items-center justify-center p-4 text-center border-[8px] border-[#050505]"
+            >
+              <span className="text-3xl font-black leading-none">2+</span>
+              <span className="text-[10px] font-bold uppercase tracking-tighter leading-tight mt-1">Years of Creative Excellence</span>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* --- MARQUEE --- */}
+      <section className="py-20 border-y border-zinc-900 overflow-hidden bg-zinc-950/50">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[...clientLogos, ...clientLogos].map((client, i) => (
+            <div key={i} className="flex items-center gap-12 px-12 opacity-30 hover:opacity-100 transition-opacity grayscale hover:grayscale-0 cursor-pointer">
+              <div className="relative w-12 h-12">
+                <Image src={client.src} alt={client.name} fill className="object-contain" />
+              </div>
+              <span className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic text-zinc-200">{client.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* --- EXPERTISE / SKILLS SECTION --- */}
+      <section id="expertise" className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-end mb-24">
+            <div>
+              <h2 className="text-xs font-mono text-indigo-500 uppercase tracking-[0.5em] mb-6">// TECHNICAL STACK</h2>
+              <h3 className="text-5xl md:text-7xl font-black tracking-tighter uppercase leading-none">
+                MASTERY OVER<br />
+                <span className="text-zinc-700">THE PIXELS.</span>
+              </h3>
+            </div>
+            <p className="text-zinc-400 text-lg max-w-md">
+              I leverage the industry's most powerful tools to transform abstract ideas into cinematic reality. Each project is a blend of precision and artistic intuition.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {skills.map((skill, index) => (
+              <motion.div 
+                key={skill.name}
+                whileHover={{ y: -10 }}
+                className="group p-10 rounded-[3rem] bg-zinc-900/30 border border-zinc-800/50 backdrop-blur-sm relative overflow-hidden"
+              >
+                <div className={`w-16 h-16 ${skill.bg} ${skill.color} rounded-2xl flex items-center justify-center mb-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
+                  <skill.icon size={32} />
+                </div>
+                <h4 className="text-2xl font-bold mb-4">{skill.name}</h4>
+                <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden mb-4">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    whileInView={{ width: skill.level }}
+                    transition={{ duration: 1.5, delay: 0.2 }}
+                    className={`h-full bg-indigo-500 opacity-80`}
+                  />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Level: Professional</span>
+                  <span className="text-lg font-black text-indigo-500">{skill.level}</span>
+                </div>
+                
+                {/* Decorative Pattern */}
+                <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                  <skill.icon size={120} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- WORK GRID SECTION --- */}
+      <section id="work" className="py-32 px-6 bg-[#080808]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85]">
+              WORKS <br /> <span className="text-indigo-500">2024-2026</span>
+            </h2>
+            <div className="flex gap-4">
+              <button className="px-8 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">Graphic Design</button>
+              <button className="px-8 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">Motion</button>
+            </div>
+          </div>
+
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+            {projects.map((project) => (
+              <motion.div 
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+                className={`relative group rounded-[2.5rem] overflow-hidden border border-zinc-800 bg-zinc-900 cursor-pointer break-inside-avoid`}
+              >
+                <div className={`relative ${project.wide ? "aspect-video" : project.tall ? "aspect-[3/4]" : "aspect-square"}`}>
+                  <Image 
+                    src={project.src} 
+                    alt={project.title} 
+                    fill 
+                    className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-[2px] opacity-80 group-hover:opacity-100" 
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8">
+                    <span className="text-indigo-400 text-xs font-black uppercase tracking-[0.2em] mb-2">{project.category}</span>
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-2xl font-black uppercase italic tracking-tighter">{project.title}</h4>
+                      <div className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center -translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                        <Plus size={24} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-20 text-center">
+            <button className="group relative px-12 py-6 bg-transparent border border-zinc-800 rounded-full overflow-hidden transition-all">
+              <span className="relative z-10 text-xs font-black uppercase tracking-[0.3em] group-hover:text-black transition-colors">Load More Projects</span>
+              <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.22, 1, 0.36, 1]" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* --- TESTIMONIALS SECTION --- */}
+      <section id="testimonials" className="py-32 px-6 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-24">
+            <h2 className="text-xs font-mono text-indigo-500 uppercase tracking-[0.5em] mb-4">THE FEEDBACK</h2>
+            <h3 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic">KIND WORDS.</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((t, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ scale: 0.98 }}
+                className="p-12 rounded-[3.5rem] bg-zinc-900/30 border border-zinc-800/50 backdrop-blur-md relative"
+              >
+                <div className="absolute top-10 right-10 text-zinc-800">
+                  <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5C12.017 3.89543 12.9216 3 14.0261 3H19.017C21.2261 3 23.017 4.79086 23.017 7V15C23.017 18.3137 20.3307 21 17.017 21H14.017ZM3.01691 21L3.01691 18C3.01691 16.8954 3.91234 16 5.01691 16H8.01691C8.56919 16 9.01691 15.5523 9.01691 15V9C9.01691 8.44772 8.56919 8 8.01691 8H4.01691C3.46462 8 3.01691 8.44772 3.01691 9V11C3.01691 11.5523 2.56919 12 2.01691 12H1.01691V5C1.01691 3.89543 1.92148 3 3.026 3H8.01691C10.226 3 12.0169 4.79086 12.0169 7V15C12.0169 18.3137 9.33062 21 6.01691 21H3.01691Z" /></svg>
+                </div>
+                <p className="text-2xl font-medium text-zinc-300 leading-relaxed mb-10 relative z-10">"{t.text}"</p>
+                <div className="flex items-center gap-5 border-t border-zinc-800 pt-8">
+                  <div className="w-14 h-14 rounded-full bg-zinc-800 overflow-hidden">
+                    <div className="w-full h-full bg-indigo-500/20 flex items-center justify-center text-indigo-500 font-bold">{t.name[0]}</div>
+                  </div>
+                  <div>
+                    <h5 className="text-lg font-black uppercase tracking-tight">{t.name}</h5>
+                    <span className="text-sm font-mono text-zinc-500 uppercase tracking-widest">{t.role}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- CONTACT SECTION --- */}
+      <section id="contact" className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-[4rem] p-8 md:p-20 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-600/5 blur-[120px] rounded-full -z-10" />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+              <div>
+                <h2 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic leading-none mb-10">
+                  LET'S <br /> <span className="text-indigo-500">TALK.</span>
+                </h2>
+                <p className="text-xl text-zinc-400 mb-12 max-w-md">
+                  Have a vision? Let’s bring it to life with cinematic precision. Now accepting select projects for Q3 2026.
+                </p>
+                
+                <div className="space-y-6">
+                  <a href="mailto:fahimnafiz70@gmail.com" className="flex items-center gap-6 group">
+                    <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center group-hover:bg-indigo-600 transition-all group-hover:scale-110">
+                      <Mail size={24} />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block mb-1">Email Me</span>
+                      <span className="text-xl font-bold">fahimnafiz70@gmail.com</span>
+                    </div>
+                  </a>
+                  <a href="https://wa.me/01855941177" className="flex items-center gap-6 group">
+                    <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center group-hover:bg-green-600 transition-all group-hover:scale-110">
+                      <FaWhatsapp size={24} />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block mb-1">WhatsApp</span>
+                      <span className="text-xl font-bold">+880 1855 941177</span>
+                    </div>
+                  </a>
+                </div>
+
+                <div className="flex gap-4 mt-16">
+                  {[FaFacebookF, FaInstagram, SiBehance, FaLinkedinIn].map((Icon, idx) => (
+                    <motion.a 
+                      key={idx}
+                      whileHover={{ y: -5, scale: 1.1 }}
+                      href="#"
+                      className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center hover:bg-white hover:text-black transition-all"
+                    >
+                      <Icon size={20} />
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-black/40 border border-zinc-800 p-10 rounded-[3rem] backdrop-blur-md">
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 ml-4">Full Name</label>
+                      <input type="text" placeholder="John Doe" className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none transition-all" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 ml-4">Email Address</label>
+                      <input type="email" placeholder="john@example.com" className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none transition-all" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 ml-4">Subject</label>
+                    <select className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none transition-all appearance-none">
+                      <option>Visual Identity</option>
+                      <option>Motion Graphics</option>
+                      <option>Event Branding</option>
+                      <option>Other Collaboration</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 ml-4">Message</label>
+                    <textarea rows={5} placeholder="Tell me about your project..." className="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:border-indigo-500 outline-none transition-all resize-none"></textarea>
+                  </div>
+                  <button className="w-full py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-indigo-500 hover:text-white transition-all transform active:scale-95">Send Message</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <footer className="py-20 px-6 border-t border-zinc-900">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-black">R</div>
+              <span className="text-lg font-black tracking-tighter uppercase">RelaxStudio</span>
+            </div>
+            <p className="text-zinc-500 text-sm font-medium">© 2026 Syed Fahim Muddasir. All Rights Reserved.</p>
+          </div>
+          
+          <div className="flex gap-8">
+            <a href="#" className="text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Privacy Policy</a>
+            <a href="#" className="text-zinc-500 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">Terms of Service</a>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span className="text-zinc-600 text-[10px] font-mono uppercase tracking-widest italic">Built with Next.js & Framer Motion</span>
+            <div className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-white hover:border-white transition-all cursor-pointer">
+              <FaGithub size={18} />
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* --- POPUP MODAL (HSC '26 PAUSE) --- */}
       <AnimatePresence>
         {showPopup && (
-          <div className="fixed inset-0 z-[999] flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]">
+          <div className="fixed inset-0 z-[999] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="max-w-md w-full bg-[#0a0a0a] border border-zinc-800/50 p-10 rounded-[3rem] shadow-[0_0_80px_rgba(0,0,0,1)] text-center relative overflow-hidden"
+              initial={{ opacity: 0, scale: 0.9, y: 40 }} 
+              animate={{ opacity: 1, scale: 1, y: 0 }} 
+              exit={{ opacity: 0, scale: 0.95 }} 
+              className="max-w-md w-full bg-[#0a0a0a] border border-zinc-800/50 p-10 rounded-[4rem] shadow-2xl text-center relative overflow-hidden"
             >
-              {/* ... Popup content ... */}
               <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
               
-              <h2 className="text-white text-3xl font-black italic tracking-tighter mb-4 uppercase">
-                Temporary <span className="text-indigo-500">Pause</span>
-              </h2>
-
-              <p className="text-zinc-500 text-sm mb-10">
-                I am currently focused on my **HSC '26 Board Examinations**. 
-                Back in July 2026.
+              <div className="w-20 h-20 bg-indigo-600/10 text-indigo-500 rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <Play size={32} />
+              </div>
+              
+              <h2 className="text-white text-3xl font-black italic mb-4 uppercase leading-none">Temporary <span className="text-indigo-500">Pause</span></h2>
+              <p className="text-zinc-500 text-sm mb-10 leading-relaxed">
+                I am currently focused on my <span className="text-white font-bold">HSC '26 Board Examinations</span>. Creative services will resume in full capacity starting <span className="text-white font-bold">July 2026</span>.
               </p>
-
-              <motion.button
-                whileHover={{ scale: 1.02, backgroundColor: "#6366f1", color: "#fff" }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowPopup(false)}
-                className="w-full py-4 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[10px] rounded-full"
+              
+              <button 
+                onClick={() => setShowPopup(false)} 
+                className="w-full py-4 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[10px] rounded-2xl hover:bg-indigo-500 hover:text-white transition-all shadow-xl shadow-white/5"
               >
                 Enter Portfolio
-              </motion.button>
+              </button>
+              
+              <div className="mt-8 pt-8 border-t border-zinc-900 flex justify-center gap-6">
+                 <FaFacebookF className="text-zinc-700 hover:text-white cursor-pointer" />
+                 <FaInstagram className="text-zinc-700 hover:text-white cursor-pointer" />
+                 <FaWhatsapp className="text-zinc-700 hover:text-white cursor-pointer" />
+              </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-      
-    </main>
-        
-        {/* --- MAIN BIO CARD + PICTURE --- */}
-        <motion.div 
-          variants={item}
-          className="md:col-span-2 row-span-2 bg-zinc-900/50 border border-zinc-800/50 backdrop-blur-md rounded-[3rem] p-12 flex flex-col justify-between overflow-hidden relative"
-        >
-          {/* Layout Container */}
-          <div className="flex flex-col items-start gap-8 relative z-10">
-            
-            {/* Profile Picture (Bigger & Glow Effect) */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-              <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-zinc-800 ring-4 ring-indigo-500/10 shrink-0 relative">
-                <Image 
-                  src="/profile.jpg" 
-                  alt="Syed Fahim Muddasir Profile"
-                  width={176} 
-                  height={176}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  priority 
-                />
-              </div>
-            </div>
-
-            {/* Big Name Section */}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3>
-              </div>
-              
-              <h1 className="text-7xl md:text-7xl font-black tracking-tighter leading-[0.9]">
-                Syed Fahim<br />
-                <span className="text-zinc-600 hover:text-indigo-400 transition-all duration-500">Muddasir</span>
-              </h1>
-            </div>
-          </div>
-          
-          {/* Bio Text with more padding-top */}
-          <div className="relative z-10 mt-12">
-            <p className="text-zinc-400 text-xl leading-relaxed max-w-xl font-medium">
-              Based in Dhaka, I specialize in crafting cinematic visual identities, advanced photo manipulation, and automated digital tools that bridge aesthetics with function.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Project Card 1 - Now Clickable */}
-        <motion.a 
-          href="https://www.behance.net/gallery/243588815/Willians-Study-Tour-26-Full-Event-Branding" 
-          target="_blank"
-          rel="noopener noreferrer"
-          variants={item}
-          whileHover={{ scale: 0.98 }}
-          className="md:col-span-2 bg-zinc-900/50 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] p-8 group cursor-pointer overflow-hidden relative block"
-        >
-          <div className="relative z-10 h-full flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-                <div>
-                    <h3 className="text-zinc-500 uppercase text-xs tracking-[0.2em] mb-2 font-bold">Featured Project</h3>
-                    <h2 className="text-3xl font-bold group-hover:text-indigo-400 transition-colors">Willian's Study Tour 26'</h2>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <ArrowUpRight className="text-zinc-600 group-hover:text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  <span className="text-[10px] text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity font-mono uppercase tracking-widest">View Case Study</span>
-                </div>
-            </div>
-            <p className="text-zinc-400 mt-4 max-w-sm">
-              Willian’s Study Tour '26 is a vibrant, 360-degree brand identity designed for a modern tour experience. 
-              The project blends a sophisticated "dark mode" aesthetic with electric neon highlights.
-            </p>
-          </div>
-          
-          {/* Animated Glow Effect on Hover */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-3xl group-hover:bg-indigo-500/20 transition-all duration-500" />
-        </motion.a>
-
-{/* Expertise Tag Cloud */}
-<motion.div 
-  variants={item}
-  className="md:col-span-2 bg-zinc-900/50 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] p-8 relative overflow-hidden group"
->
-  {/* Big Highlight Section */}
-  <div className="mb-10">
-    <div className="flex flex-col">
-      {/* Big Number */}
-      <span className="text-7xl font-black text-white tracking-tighter leading-none">
-        2<span className="text-indigo-500">yr+</span>
-      </span>
-      
-      {/* Label Below the Number */}
-      <div className="flex items-center gap-3 mt-2">
-        <div className="w-8 h-[1px] bg-indigo-500/50" />
-        <h3 className="text-zinc-500 uppercase text-xs tracking-[0.4em] font-bold">
-          Creative Expertise In
-        </h3>
-      </div>
     </div>
-  </div>
-
-  {/* Tags Section */}
-  <div className="flex flex-wrap gap-2.5 relative z-10">
-    {[
-      'Visual Branding', 'Logo Design', 'Social Media Poster Design', 
-      'Event Branding', 'T-Shirt Design', 'Motion Graphics', 
-      'Video Editing', 'Photography'
-    ].map((skill) => (
-      <span 
-        key={skill} 
-        className="px-5 py-2.5 bg-zinc-800/30 rounded-full text-sm border border-zinc-800/50 hover:border-indigo-500/50 hover:bg-zinc-800 transition-all duration-300 cursor-default text-zinc-400 hover:text-white font-medium"
-      >
-        {skill}
-      </span>
-    ))}
-  </div>
-
-  {/* Background Glow */}
-  <div className="absolute top-[-10%] left-[-5%] w-32 h-32 bg-indigo-600/10 blur-[60px] rounded-full group-hover:bg-indigo-600/20 transition-all duration-700" />
-</motion.div>
-
-{/* --- USED SOFTWARE SECTION WITH PROGRESS BARS --- */}
-<motion.div 
-  variants={item} 
-  className="md:col-span-4 mt-20 mb-8 border border-white/5 bg-zinc-900/20 backdrop-blur-xl rounded-[3rem] p-8 md:p-12 overflow-hidden relative"
->
-  <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-indigo-500/10 blur-[100px] rounded-full" />
-  
-  <div className="relative z-10 mb-12 flex flex-col items-center md:items-start text-center md:text-left">
-    <h2 className="text-4xl md:text-5xl font-black tracking-tighter italic uppercase text-white leading-none">
-      Used <span className="text-zinc-600">Software</span>
-    </h2>
-    <div className="h-1.5 w-24 bg-indigo-500 mt-4 rounded-full" />
-    <p className="text-zinc-500 font-mono text-[10px] tracking-[0.4em] uppercase mt-6">
-      // Technical Expertise & Proficiency
-    </p>
-  </div>
-
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 relative z-10">
-    {[
-      { name: "Photoshop", img: "ps.png", level: "82%", color: "bg-blue-500" },
-      { name: "Illustrator", img: "ai.png", level: "85%", color: "bg-orange-500" },
-      { name: "After Effects", img: "ae.png", level: "65%", color: "bg-purple-500" },
-      { name: "Premiere Pro", img: "pr.png", level: "55%", color: "bg-indigo-500" },
-      { name: "Lightroom", img: "lr.png", level: "60%", color: "bg-cyan-500" },
-      { name: "Davinci Resolve", img: "DaVinci_Resolve_Studio.png", level: "40%", color: "bg-blue-500" },
-    ].map((skill) => (
-      <motion.div
-        key={skill.name}
-        whileHover={{ scale: 1.05, y: -5 }}
-        className="group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all duration-500 shadow-xl"
-      >
-        <div className="relative w-12 h-12 mb-6 transition-all duration-500 transform group-hover:scale-110">
-            <img 
-                src={`/logos/${skill.img}`} 
-                alt={skill.name} 
-                className="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
-            />
-        </div>
-
-        <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400 group-hover:text-white transition-all duration-500 mb-4">
-          {skill.name}
-        </span>
-
-        {/* --- PROFICIENCY BAR --- */}
-        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden relative">
-            <motion.div 
-                initial={{ width: 0 }}
-                whileInView={{ width: skill.level }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-                className={`absolute top-0 left-0 h-full ${skill.color} opacity-60 group-hover:opacity-100 transition-opacity`}
-            />
-        </div>
-        <span className="text-[8px] font-mono text-zinc-600 mt-2 group-hover:text-zinc-300 transition-colors">
-            {skill.level} EXPERT
-        </span>
-      </motion.div>
-    ))}
-  </div>
-</motion.div>
-        {/* --- DESIGNS SHOWCASE SECTION (FIXED 10 CARDS - NO GAPS) --- */}
-        <motion.div variants={item} className="md:col-span-4 mt-12 mb-6">
-          <div className="flex items-end gap-4 mb-8">
-            <h2 className="text-5xl font-black tracking-tighter">Selected <span className="text-indigo-500">Designs</span></h2>
-            <div className="h-[2px] flex-1 bg-zinc-800 mb-3 hidden md:block" />
-            <p className="text-zinc-500 font-mono text-sm mb-2">Visual Showcase 2024-2026</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 grid-flow-row-dense">
-            
-            {/* 1. Portrait (1080x1350) */}
-            <motion.div whileHover={{ y: -10 }} className="md:row-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/5]">
-              <Image src="/designs/work1.png" alt="W1" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold tracking-widest uppercase mb-1">TongErKhobor</span>
-                <h3 className="text-3xl font-bold text-white leading-tight">26 March Poster</h3>
-              </div>
-            </motion.div>
-
-            {/* 2. Wide Card (FB Cover Style) */}
-            <motion.div whileHover={{ y: -10 }} className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video">
-              <Image src="/designs/work2.jpg" alt="W2" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold tracking-widest uppercase mb-1">Willes Literary Club</span>
-                <h3 className="text-3xl font-bold text-white leading-tight">Event Banner</h3>
-              </div>
-            </motion.div>
-
-            {/* 3. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work3.png" alt="W3" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-[10px] font-bold uppercase mb-1">Ta'atuf Foundation</span>
-                <h3 className="text-xl font-bold text-white">Executive Panel Post</h3>
-              </div>
-            </motion.div>
-
-            {/* 4. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/Artboard 1.png" alt="W4" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-[10px] font-bold uppercase mb-1">Omni Diplomatic Forum</span>
-                <h3 className="text-xl font-bold text-white">Member Recruit Post</h3>
-              </div>
-            </motion.div>
-
-            {/* 5. Wide Card */}
-            <motion.div whileHover={{ y: -10 }} className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video">
-              <Image src="/designs/work5.png" alt="W5" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willian's study tour 26</span>
-                <h3 className="text-3xl font-bold text-white">Full Event Branding</h3>
-              </div>
-            </motion.div>
-
-            {/* 6. Tall Card (Right Side) */}
-            <motion.div whileHover={{ y: -10 }} className="md:row-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/5]">
-              <Image src="/designs/eid.png" alt="W6" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Relax Studio</span>
-                <h3 className="text-3xl font-bold text-white">Eid Mubarak Post</h3>
-              </div>
-            </motion.div>
-
-            {/* 7. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work7.png" alt="W7" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
-                <h3 className="text-xl font-bold text-white">Poet Birthday Post</h3>
-              </div>
-            </motion.div>
-
-            {/* 8. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work8.png" alt="W8" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
-                <h3 className="text-xl font-bold text-white">Mourn Post</h3>
-              </div>
-            </motion.div>
-
-            {/* 9. Wide Card */}
-            <motion.div whileHover={{ y: -10 }} className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video">
-              <Image src="/designs/banner.png" alt="W9" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Concept Design</span>
-                <h3 className="text-3xl font-bold text-white">Practice Design</h3>
-              </div>
-            </motion.div>
-
-            {/* 10. Final Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work10.png" alt="W10" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Madesiho</span>
-                <h3 className="text-xl font-bold text-white">T-Shirt Design And Poster</h3>
-              </div>
-            </motion.div>
-
-          </div>
-        </motion.div> 
-
-{/* --- VIDEO SHOWCASE SECTION --- */}
-        <motion.div variants={item} className="md:col-span-4 mt-16 mb-12">
-          <div className="flex items-end gap-4 mb-8">
-            <h2 className="text-5xl font-black tracking-tighter">Motion <span className="text-indigo-500">Graphics</span></h2>
-            <div className="h-[2px] flex-1 bg-zinc-800 mb-3 hidden md:block" />
-            <p className="text-zinc-500 font-mono text-sm mb-2">Selected Motion Video Works</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* Video Card 1 - Full Width/Large */}
-            <motion.div 
-              onClick={() => setSelectedVideo({
-                src: "/videos/main.mp4",
-                title: "Promotional Motion",
-                tag: "Relax Studio"
-              })}
-              whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
-            >
-              <video 
-                src="/videos/main.mp4" 
-                poster="/videos/thumb1.jpg"
-                autoPlay 
-                muted 
-                loop 
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Relax Studio</span>
-                <h3 className="text-3xl font-bold text-white">Promotional Motion</h3>
-              </div>
-            </motion.div>
-
-            {/* Video Card 2 */}
-            <motion.div 
-              onClick={() => setSelectedVideo({
-                src: "/videos/AQMKKr8tc8mqMomgTp0yvDM0SonscX5DheqZb0A8PcLMvAL8fWWTL8KIQtvSoHBa4R9aOyVBFYzo2xlyDSysz_57MMNuIhtx65L1Im45Kg.mp4",
-                title: "New Year Video",
-                tag: "Willian's study tour 26"
-              })}
-              whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
-            >
-              <video 
-                src="/videos/AQMKKr8tc8mqMomgTp0yvDM0SonscX5DheqZb0A8PcLMvAL8fWWTL8KIQtvSoHBa4R9aOyVBFYzo2xlyDSysz_57MMNuIhtx65L1Im45Kg.mp4" 
-                poster="/videos/thumb2.jpg"
-                autoPlay 
-                muted 
-                loop 
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Willian's study tour 26</span>
-                <h3 className="text-3xl font-bold text-white">New Year Video</h3>
-              </div>
-            </motion.div>
-
-          </div>
-        </motion.div>
-       
-        {/* --- VIDEO EDITING SECTION (WITH POPUP & SOUND) --- */}
-        <motion.div variants={item} className="md:col-span-4 mt-20 mb-12">
-          <div className="flex items-end gap-4 mb-8">
-            <h2 className="text-5xl font-black tracking-tighter text-white">Video<span className="text-indigo-500"> Editing</span></h2>
-            <div className="h-[2px] flex-1 bg-zinc-800 mb-3 hidden md:block" />
-            <p className="text-zinc-500 font-mono text-sm mb-2">Selected Video-Editing Works</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* Video Card 1 */}
-            <motion.div 
-              onClick={() => setSelectedVideo({
-                src: "/videos/AQOKsDmJ8VnS7Kh99V0l4Fwgiu0ViZnniPzTFvmS2aEfsrXe5twZkJd2N9GwZpx0a_GXkTcdIkd9GHhLY6R78DAylhJbnMZYT58KQvlAiZThIg.mp4",
-                title: "Willian's Study Tour 26",
-                tag: "Official Promotional Reel"
-              })}
-              whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
-            >
-              <video 
-                src="/videos/AQOKsDmJ8VnS7Kh99V0l4Fwgiu0ViZnniPzTFvmS2aEfsrXe5twZkJd2N9GwZpx0a_GXkTcdIkd9GHhLY6R78DAylhJbnMZYT58KQvlAiZThIg.mp4" 
-                autoPlay muted loop playsInline
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-10 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Willian's Study Tour 26</span>
-                <h3 className="text-3xl font-black text-white leading-tight">Official Promotional Reel</h3>
-              </div>
-            </motion.div>
-
-            {/* Video Card 2 */}
-            <motion.div 
-              onClick={() => setSelectedVideo({
-                src: "/videos/AQO1So12voezPc1KQwH5LFJPTGZYHbzCgfqvClz0-Bcafh9e06klMBh_tVCxjRZ4k2ZYZaQrbWI6BEyRbiZpBWqA4S6Y1Pg-e8SuMNNmVek7hw.mp4",
-                title: "WLC Nobinboron 25",
-                tag: "Official Promotional Reel"
-              })}
-              whileHover={{ y: -5 }}
-              className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
-            >
-              <video 
-                src="/videos/AQO1So12voezPc1KQwH5LFJPTGZYHbzCgfqvClz0-Bcafh9e06klMBh_tVCxjRZ4k2ZYZaQrbWI6BEyRbiZpBWqA4S6Y1Pg-e8SuMNNmVek7hw.mp4" 
-                autoPlay muted loop playsInline
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-all duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-10 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">WLC Nobinboron 25</span>
-                <h3 className="text-3xl font-black text-white leading-tight">Official Promotional Reel</h3>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* --- VIDEO POPUP MODAL --- */}
-          <AnimatePresence>
-            {selectedVideo && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setSelectedVideo(null)}
-                className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 md:p-12"
-              >
-                <motion.div 
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="relative bg-zinc-950 border border-zinc-800 rounded-[3rem] overflow-hidden max-w-5xl w-full shadow-2xl"
-                >
-                  <div className="relative aspect-video w-full bg-black">
-                    <video 
-                      src={selectedVideo.src} 
-                      controls 
-                      autoPlay 
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="p-8 md:p-10 border-t border-zinc-800">
-                    <span className="text-[#5865F2] text-sm font-bold uppercase tracking-tighter mb-2 block">{selectedVideo.tag}</span>
-                    <h2 className="text-3xl md:text-5xl font-black text-white leading-none">{selectedVideo.title}</h2>
-                    <button 
-                      onClick={() => setSelectedVideo(null)}
-                      className="mt-8 px-6 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-white font-bold hover:bg-zinc-800 transition-all text-sm"
-                    >
-                      Close Video
-                    </button>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )}
-        
-          </AnimatePresence>
-        </motion.div>
-
-{/* --- INFINITE LOGO SCROLL SECTION --- */}
-<motion.div variants={item} className="md:col-span-4 mt-20 overflow-hidden relative py-10">
-  
-  {/* Header Text */}
-  <div className="text-center mb-10">
-    <p className="text-zinc-500 text-sm font-medium tracking-widest uppercase mb-2">
-      Working With
-    </p>
-  </div>
-
-  {/* Side Fades (Video-r moto side e halka shadow/fade) */}
-  <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10" />
-  <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10" />
-
-  {/* The Marquee Container */}
-  <div className="flex overflow-hidden group">
-    <div className="animate-marquee flex gap-12 items-center whitespace-nowrap">
-      
-      {/* 1st Set of Logos */}
-      {[...clientLogos, ...clientLogos].map((logo, index) => (
-        <a 
-          key={index} 
-          href={logo.url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center gap-4 px-8 py-4 opacity-50 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0"
-        >
-          <div className="relative w-12 h-12 md:w-16 md:h-16">
-            <Image 
-              src={logo.src} 
-              alt={logo.name} 
-              fill 
-              className="object-contain" 
-            />
-          </div>
-          <span className="text-xl md:text-2xl font-bold text-white tracking-tight">
-            {logo.name}
-          </span>
-        </a>
-      ))}
-    </div>
-  </div>
-</motion.div>
-{/* --- TESTIMONIALS SECTION --- */}
-<motion.div variants={item} className="md:col-span-4 mt-20 mb-12 px-6">
-  <div className="text-center mb-16 relative z-10">
-    <h2 className="text-4xl font-black tracking-tighter text-white">Client <span className="text-indigo-500">Love</span></h2>
-    <p className="text-zinc-500 font-mono text-[10px] mt-1 uppercase tracking-[0.3em]">Interactive Feedback Cloud</p>
-  </div>
-
-  {/* Grid Layout: PC-te 3 column, Tablet-e 2, Mobile-e 1 */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
-    {testimonials.map((t, index) => (
-      <motion.div
-        key={index}
-        drag
-        dragConstraints={{ left: -20, right: 20, top: -20, bottom: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-          y: [0, index % 2 === 0 ? -8 : 8, 0],
-          transition: { 
-            duration: 5, 
-            repeat: Infinity, 
-            delay: index * 0.1, 
-            ease: "easeInOut" 
-          }
-        }}
-        whileHover={{ 
-          scale: 1.02, 
-          rotate: index % 2 === 0 ? 1 : -1,
-          zIndex: 50 
-        }}
-        // "Ahiya'r Ammu" ba special card gulo highlight korar jonno logic
-        className={`p-6 bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md rounded-[2.5rem] shadow-xl cursor-grab active:cursor-grabbing transition-all
-          ${index === 2 ? 'lg:scale-110 border-indigo-500/20 bg-zinc-900/60' : ''}
-          ${index === 6 ? 'lg:col-span-1 border-pink-500/10' : ''}
-        `}
-      >
-        <p className="text-zinc-300 text-[13px] leading-relaxed mb-4 italic font-medium leading-relaxed">
-          "{t.text}"
-        </p>
-        <div className="flex flex-col border-l-2 border-indigo-500/40 pl-4">
-          <span className="text-white font-black text-[10px] uppercase tracking-[0.2em]">
-            {t.name}
-          </span>
-          <span className="text-zinc-500 text-[9px] font-mono mt-0.5">
-            {t.role}
-          </span>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-</motion.div>
-        {/* --- CONTACT SECTION (The End) --- */}
-        <motion.div
-          variants={item}
-          className="md:col-span-4 bg-zinc-900/30 border border-zinc-800/50 backdrop-blur-sm rounded-[2.5rem] p-10 mt-8"
-        >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-            <div>
-              <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
-              <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
-            </div>
-            <a href="mailto:fahimnafiz70@gmail.com" className="px-8 py-4 bg-indigo-600 rounded-full font-semibold hover:bg-indigo-500 transition-colors flex items-center gap-2 group">
-              Drop an Email
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </a>
-          </div>
-
-          {/* Social Links Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {socialLinks.map((link) => {
-              const Icon = link.icon;
-              return (
-                <motion.a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={iconCardHover}
-                  initial="rest"
-                  whileHover="hover"
-                  className={`border border-zinc-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-3 transition-colors ${link.color}`}
-                >
-                  <Icon className="w-8 h-8" strokeWidth={1.5} />
-                  <span className="text-sm font-medium text-zinc-300">{link.name}</span>
-                </motion.a>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        {/* Footer info */}
-        <motion.div variants={item} className="md:col-span-4 text-center text-zinc-700 py-8 text-sm font-mono">
-            © 2026 Syed Fahim Muddasir. Built with Next.js & Framer Motion.
-        </motion.div>
-
-      </motion.div>
-    </main>
   );
-  }
+}
