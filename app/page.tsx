@@ -72,8 +72,12 @@ const testimonials = [
 
   return (
 
-    <main className="relative min-h-screen bg-black overflow-x-hidden">
-      
+  
+
+    
+    <main className="min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30">
+
+         
       {/* 1. Tomar existing content guloke ei div diye wrap koro */}
       <div className={`transition-all duration-1000 ${showPopup ? "blur-md opacity-40 pointer-events-none" : "blur-0 opacity-100"}`}>
         <Hero />
@@ -131,8 +135,6 @@ const testimonials = [
       </AnimatePresence>
       
     </main>
-    
-    <main className="min-h-screen bg-[#050505] text-zinc-100 p-6 md:p-16 font-sans selection:bg-indigo-500/30">
       
       {/* Background Decorative Glows */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
