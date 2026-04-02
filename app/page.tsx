@@ -618,18 +618,17 @@ const testimonials = [
         >
          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-
-            <div>
-
-              <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
-
-              <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
-
-              <p className="text-red-600 text-lg mt-2 animate-pulse"> Warning! </p>
-
-               <h2 className="text-4xl font-bold tracking-tight">Some Account may be deactivated . If your quary is emergency then use mail for connect with him .</h2>
-
-            </div>
+  <div>
+    <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
+    <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
+    
+    {/* Warning Section */}
+    <p className="text-red-600 text-lg mt-4 animate-pulse font-semibold"> Warning! </p>
+    <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
+      Some accounts may be deactivated. If your inquiry is urgent, please use email to connect.
+    </h2>
+  </div>
+</div>
 
             <a href="mailto:fahimnafiz70@gmail.com" className="px-8 py-4 bg-indigo-600 rounded-full font-semibold hover:bg-indigo-500 transition-colors flex items-center gap-2 group">
               Drop an Email
