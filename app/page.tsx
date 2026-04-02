@@ -624,7 +624,7 @@ const testimonials = [
     
     {/* Warning Section */}
     <p className="text-red-600 text-lg mt-4 animate-pulse font-semibold"> Warning! </p>
-    <p className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
+    <p className="text-zinc-500 text-lg mt-2">
       Some accounts may be deactivated. If your inquiry is urgent, please use email to connect.
     </p>
   </div>
