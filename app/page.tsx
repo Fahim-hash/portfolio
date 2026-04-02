@@ -107,7 +107,7 @@ const testimonials = [
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3> <br />
+                <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3><br/>
            <span className="text-red-600 uppercase text-sm tracking-[0.3em] font-black animate-pulse"> Currently in a Break </span>
               </div>
               
@@ -616,11 +616,21 @@ const testimonials = [
           variants={item}
           className="md:col-span-4 bg-zinc-900/30 border border-zinc-800/50 backdrop-blur-sm rounded-[2.5rem] p-10 mt-8"
         >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-            <div>
-              <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
-              <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
-            </div>
+         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+  <div>
+    <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
+    <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
+    
+    <div className="mt-6 p-4 border-l-4 border-red-600 bg-red-50/50">
+      <p className="text-red-600 font-bold uppercase tracking-wider text-sm animate-pulse">
+        Important Note
+      </p>
+      <p className="text-zinc-800 text-lg mt-1">
+        Some social accounts may be inactive. For <strong>urgent inquiries</strong>, please reach out via email.
+      </p>
+    </div>
+  </div>
+
             <a href="mailto:fahimnafiz70@gmail.com" className="px-8 py-4 bg-indigo-600 rounded-full font-semibold hover:bg-indigo-500 transition-colors flex items-center gap-2 group">
               Drop an Email
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
