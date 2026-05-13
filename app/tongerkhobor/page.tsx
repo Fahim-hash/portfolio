@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Download, Image as ImageIcon, Sparkles, Newspaper, Move } from 'lucide-react'
+import { Download, Image as ImageIcon, Sparkles, Newspaper, Move, RefreshCw } from 'lucide-react'
 
 type Template = 'minimal' | 'dark_overlay'
 
@@ -17,8 +17,7 @@ export default function PhotocardGenerator() {
   const [imagePos, setImagePos] = useState({ x: 0, y: 0 })
   const [imageZoom, setImageZoom] = useState(1)
   
-  const [headlineSize, setHeadlineSize] = useState(54) // একটু বড় ফন্ট সাইজ
-  const [showWatermark, setShowWatermark] = useState(true)
+  const [headlineSize, setHeadlineSize] = useState(54)
   const [logoImg, setLogoImg] = useState<HTMLImageElement | null>(null)
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -47,7 +46,6 @@ export default function PhotocardGenerator() {
     }
   }
 
-  // ফিক্সড র‍্যাপ টেক্সট ফাংশন
   const drawHeadline = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
     const words = text.split(' ')
     let lines: { text: string; isBold: boolean }[][] = [[]]
@@ -122,45 +120,58 @@ export default function PhotocardGenerator() {
       ctx.restore()
 
       if (template === 'dark_overlay') {
-        const grad = ctx.createLinearGradient(0, targetH - 300, 0, targetH)
+        const grad = ctx.createLinearGradient(0, targetH - 350, 0, targetH)
         grad.addColorStop(0, 'transparent')
-        grad.addColorStop(1, 'rgba(0,0,0,0.9)')
+        grad.addColorStop(1, 'rgba(0,0,0,0.95)')
         ctx.fillStyle = grad
         ctx.fillRect(0, 0, W, targetH)
       }
     }
 
-    // 3. Category & Date
-    const contentY = (H * 0.55) + 80
+    // 3. Watermark / Logo (TOP RIGHT পজিশন - ফিক্সড)
+    if (logoImg) {
+      ctx.save()
+      // হোয়াইট মোডে লোগো কালো হবে
+      if (template === 'minimal') ctx.filter = 'invert(1) contrast(200%)'
+      
+      const logoW = 220 // একটু বড় লোগো
+      const logoH = (logoImg.height / logoImg.width) * logoW
+      // টপ-রাইট কর্নারে পজিশন
+      ctx.drawImage(logoImg, W - logoW - 50, 50, logoW, logoH)
+      ctx.restore()
+    }
+
+    // 4. Category & Date
+    const contentY = (H * 0.55) + 70
     ctx.textBaseline = 'top'
     ctx.textAlign = 'left'
     
     ctx.fillStyle = '#EF4444'
-    ctx.font = 'bold 30px Arial'
+    ctx.font = 'bold 32px Arial'
     ctx.fillText(category.toUpperCase(), 60, contentY)
 
-    ctx.fillStyle = template === 'minimal' ? '#6B7280' : '#9CA3AF'
+    ctx.fillStyle = template === 'minimal' ? '#64748b' : '#94a3b8'
     ctx.font = '24px Arial'
     ctx.fillText(date, 60, contentY + 45)
 
-    // 4. Headline (Fixed)
-    const headY = contentY + 110
+    // 5. Headline
+    const headY = contentY + 115
     const headHeight = drawHeadline(ctx, headline, 60, headY, W - 120, headlineSize * 1.3)
 
-    // 5. Subtext
+    // 6. Subtext
     if (subtext) {
-      ctx.fillStyle = template === 'minimal' ? '#4B5563' : '#D1D5DB'
+      ctx.fillStyle = template === 'minimal' ? '#475569' : '#cbd5e1'
       ctx.font = '34px Arial'
       const words = subtext.split(' ')
       let line = ''
-      let subTextY = headY + headHeight + 20
+      let subTextY = headY + headHeight + 25
       
       words.forEach(word => {
         const testLine = line + word + ' '
         if (ctx.measureText(testLine).width > W - 120) {
           ctx.fillText(line, 60, subTextY)
           line = word + ' '
-          subTextY += 50
+          subTextY += 55
         } else {
           line = testLine
         }
@@ -168,91 +179,96 @@ export default function PhotocardGenerator() {
       ctx.fillText(line, 60, subTextY)
     }
 
-    // 6. Watermark / Logo
-    if (showWatermark && logoImg) {
-      ctx.save()
-      if (template === 'minimal') ctx.filter = 'invert(1) contrast(200%)'
-      const logoW = 200
-      const logoH = (logoImg.height / logoImg.width) * logoW
-      ctx.drawImage(logoImg, W - logoW - 60, H - logoH - 60, logoW, logoH)
-      ctx.restore()
-    }
-
-    // 7. Photo Credit
+    // 7. Photo Credit (বটম লেফট - ইমেজের উপরে)
     ctx.fillStyle = '#FFFFFF'
     ctx.font = 'bold 22px Arial'
-    ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 6;
-    ctx.fillText(photoCredit, 40, (H * 0.55) - 45)
+    ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 8;
+    ctx.fillText(photoCredit, 40, (H * 0.55) - 40)
     ctx.shadowBlur = 0
 
-  }, [template, category, date, headline, subtext, photoCredit, image, imagePos, imageZoom, headlineSize, showWatermark, logoImg])
+  }, [template, category, date, headline, subtext, photoCredit, image, imagePos, imageZoom, headlineSize, logoImg])
 
   useEffect(() => { render() }, [render])
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900">
-      <header className="bg-white border-b sticky top-0 z-20 px-6 h-16 flex items-center justify-between shadow-sm">
+    <div className="min-h-screen bg-[#F1F5F9] text-slate-900 font-sans">
+      <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-30 px-8 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Newspaper className="text-red-600 w-7 h-7" />
-          <h1 className="text-xl font-black">টংগের<span className="text-red-600">খবর</span></h1>
+          <div className="bg-red-600 p-1.5 rounded-lg">
+            <Newspaper className="text-white w-5 h-5" />
+          </div>
+          <h1 className="text-xl font-black tracking-tight">টংগের<span className="text-red-600">খবর</span></h1>
         </div>
         <button onClick={() => {
           const link = document.createElement('a')
-          link.download = 'news-card.png'
+          link.download = `tongerkhobor_${Date.now()}.png`
           link.href = canvasRef.current?.toDataURL('image/png', 1.0) || ''
           link.click()
-        }} className="bg-red-600 text-white px-5 py-2 rounded-xl font-bold flex items-center gap-2 text-sm">
-          <Download className="w-4 h-4" /> ডাউনলোড
+        }} className="bg-slate-900 hover:bg-black text-white px-6 py-2.5 rounded-2xl font-bold flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200">
+          <Download className="w-4 h-4" /> ডাউনলোড কার্ড
         </button>
       </header>
 
-      <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="max-w-7xl mx-auto p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* লজিক প্যানেল */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
-            <div className="flex items-center gap-2 text-red-600 border-b pb-3">
-              <Move className="w-4 h-4" />
-              <span className="text-xs font-black uppercase tracking-widest">কন্ট্রোল প্যানেল</span>
+          <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-100 space-y-6">
+            <div className="flex items-center justify-between">
+               <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Image Settings</span>
+               <button onClick={() => {setImagePos({x:0, y:0}); setImageZoom(1)}} className="text-red-600 hover:bg-red-50 p-2 rounded-full transition-colors">
+                  <RefreshCw className="w-4 h-4" />
+               </button>
             </div>
             
             <div className="space-y-4">
-              <div>
-                <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">ফটো জুম</label>
-                <input type="range" min="1" max="3" step="0.01" value={imageZoom} onChange={e => setImageZoom(parseFloat(e.target.value))} className="w-full accent-red-600" />
+              <div className="bg-slate-50 p-4 rounded-2xl">
+                <label className="text-[10px] font-bold text-slate-500 uppercase mb-3 block">জুম এবং পজিশন</label>
+                <input type="range" min="1" max="4" step="0.01" value={imageZoom} onChange={e => setImageZoom(parseFloat(e.target.value))} className="w-full accent-red-600 mb-4" />
+                <div className="grid grid-cols-2 gap-3">
+                   <button onMouseDown={() => setImagePos(p => ({...p, x: p.x - 30}))} className="bg-white border py-2 rounded-xl text-xs font-bold shadow-sm active:bg-slate-100">LEFT</button>
+                   <button onMouseDown={() => setImagePos(p => ({...p, x: p.x + 30}))} className="bg-white border py-2 rounded-xl text-xs font-bold shadow-sm active:bg-slate-100">RIGHT</button>
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => setImagePos(p => ({...p, x: p.x - 20}))} className="bg-slate-100 p-2 rounded-lg text-xs font-bold">Left</button>
-                <button onClick={() => setImagePos(p => ({...p, x: p.x + 20}))} className="bg-slate-100 p-2 rounded-lg text-xs font-bold">Right</button>
-              </div>
+
+              <input ref={fileInputRef} type="file" hidden onChange={handleImageUpload} />
+              <button onClick={() => fileInputRef.current?.click()} className="w-full py-8 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold text-sm hover:border-red-300 hover:bg-red-50 transition-all flex flex-col items-center gap-2">
+                <ImageIcon className="w-6 h-6" />
+                ছবি আপলোড করুন
+              </button>
             </div>
 
-            <input ref={fileInputRef} type="file" hidden onChange={handleImageUpload} />
-            <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-bold text-sm hover:bg-slate-50 transition-all">
-              + ছবি আপলোড করুন
-            </button>
-
-            <div className="grid grid-cols-2 gap-3">
-               <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
-               <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
+            <div className="space-y-3">
+               <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 p-4 rounded-2xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500 transition-all" />
+                  <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 p-4 rounded-2xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500 transition-all" />
+               </div>
+               <textarea rows={2} placeholder="শিরোনাম (***বোল্ড***)" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 p-4 rounded-2xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500 font-bold" />
+               <textarea rows={2} placeholder="উপ-শিরোনাম" value={subtext} onChange={e => setSubtext(e.target.value)} className="w-full bg-slate-50 p-4 rounded-2xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
+               <input type="text" placeholder="ছবি ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 p-4 rounded-2xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
             </div>
-            <textarea rows={2} placeholder="শিরোনাম (বোল্ড করতে ***ব্যবহার করুন***)" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500 font-bold" />
-            <textarea rows={2} placeholder="উপ-শিরোনাম" value={subtext} onChange={e => setSubtext(e.target.value)} className="w-full bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
-            <input type="text" placeholder="ছবি ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
           </div>
 
-          <div className="flex gap-3">
-             <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-2xl font-bold text-sm border-2 ${template === 'minimal' ? 'border-red-600 bg-red-50 text-red-600' : 'border-transparent bg-white shadow-sm'}`}>হোয়াইট মোড</button>
-             <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-2xl font-bold text-sm border-2 ${template === 'dark_overlay' ? 'border-red-600 bg-red-50 text-red-600' : 'border-transparent bg-white shadow-sm'}`}>ডার্ক মোড</button>
+          <div className="bg-white p-3 rounded-3xl shadow-lg border flex gap-2">
+             <button onClick={() => setTemplate('minimal')} className={`flex-1 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${template === 'minimal' ? 'bg-slate-900 text-white' : 'text-slate-400 hover:bg-slate-50'}`}>White Template</button>
+             <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${template === 'dark_overlay' ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'text-slate-400 hover:bg-slate-50'}`}>Dark Template</button>
           </div>
         </div>
 
-        <div className="lg:col-span-7 flex justify-center">
-          <div className="sticky top-24 w-fit">
-            <div className="mb-4 flex items-center justify-between px-2">
-              <h2 className="text-sm font-bold flex items-center gap-2"><Sparkles className="w-4 h-4 text-yellow-500"/> প্রিভিউ</h2>
-              <span className="text-[10px] text-slate-400 font-bold">1080 x 1350</span>
+        {/* প্রিভিউ প্যানেল */}
+        <div className="lg:col-span-7 flex flex-col items-center">
+          <div className="sticky top-28 w-full max-w-[500px]">
+            <div className="flex items-center justify-between mb-6 px-4">
+               <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Live Renderer v2.0</span>
+               </div>
+               <span className="text-[10px] font-bold text-slate-300">4:5 RATIO</span>
             </div>
-            <div className="bg-white p-3 rounded-[2.5rem] shadow-2xl shadow-slate-200 border">
-              <canvas ref={canvasRef} className="w-full h-auto rounded-[2rem]" style={{ maxWidth: '420px' }} />
+            <div className="relative group">
+               <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-orange-500 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+               <div className="relative bg-white p-3 rounded-[3rem] shadow-2xl border border-white">
+                  <canvas ref={canvasRef} className="w-full h-auto rounded-[2.5rem] shadow-inner" />
+               </div>
             </div>
           </div>
         </div>
