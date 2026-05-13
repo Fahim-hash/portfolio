@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Upload, Download, RotateCcw, Layout, Image as ImageIcon, Type, Settings2, Sparkles } from 'lucide-react'
+import { Upload, Download, RotateCcw, Layout, Image as ImageIcon, Type, Settings2, Sparkles,Newspaper } from 'lucide-react'
 
 type Template = 'minimal' | 'dark_overlay' | 'classic'
 
