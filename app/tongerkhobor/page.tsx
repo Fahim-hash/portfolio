@@ -89,6 +89,8 @@ export default function PhotocardGenerator() {
 
     const W = 1080
     const H = 1350
+    const imageAreaHeight = H * 0.55 // ছবির এলাকা
+    
     canvas.width = W
     canvas.height = H
 
@@ -97,62 +99,62 @@ export default function PhotocardGenerator() {
     ctx.fillRect(0, 0, W, H)
 
     // 2. Image Drawing
-    const imageBottomLimit = H * 0.55
     if (image) {
-      const targetH = imageBottomLimit
       const imgRatio = image.width / image.height
       let drawW = W * imageZoom
       let drawH = (W / imgRatio) * imageZoom
 
-      if (drawH < targetH) {
-        drawH = targetH * imageZoom
-        drawW = (targetH * imgRatio) * imageZoom
+      if (drawH < imageAreaHeight) {
+        drawH = imageAreaHeight * imageZoom
+        drawW = (imageAreaHeight * imgRatio) * imageZoom
       }
 
       ctx.save()
       ctx.beginPath()
-      ctx.rect(0, 0, W, targetH)
+      ctx.rect(0, 0, W, imageAreaHeight)
       ctx.clip()
       
       const x = (W - drawW) / 2 + imagePos.x
-      const y = (targetH - drawH) / 2 + imagePos.y
+      const y = (imageAreaHeight - drawH) / 2 + imagePos.y
       
       ctx.drawImage(image, x, y, drawW, drawH)
       ctx.restore()
 
+      // Gradient for text legibility on image
       if (template === 'dark_overlay') {
-        const grad = ctx.createLinearGradient(0, targetH - 350, 0, targetH)
+        const grad = ctx.createLinearGradient(0, imageAreaHeight - 300, 0, imageAreaHeight)
         grad.addColorStop(0, 'transparent')
-        grad.addColorStop(1, 'rgba(0,0,0,0.95)')
+        grad.addColorStop(1, 'rgba(0,0,0,0.85)')
         ctx.fillStyle = grad
-        ctx.fillRect(0, 0, W, targetH)
+        ctx.fillRect(0, 0, W, imageAreaHeight)
       }
     }
 
-    // 3. Logo (নিচে বাম পাশে - ফিক্সড)
+    // 3. Logo (ছবির ভেতরে বাম পাশে - Bottom Left of IMAGE)
     if (logoImg) {
       ctx.save()
-      if (template === 'minimal') ctx.filter = 'invert(1) contrast(200%)'
-      
-      const logoW = 200
+      const logoW = 180
       const logoH = (logoImg.height / logoImg.width) * logoW
-      // একদম নিচে বাম পাশে পজিশন
-      ctx.drawImage(logoImg, 60, H - logoH - 60, logoW, logoH)
+      
+      // পজিশন: ছবির নিচে বাম পাশে (মার্জিন ৬০)
+      ctx.drawImage(logoImg, 60, imageAreaHeight - logoH - 40, logoW, logoH)
       ctx.restore()
     }
 
-    // 4. Photo Credit (লোগোর সাথে যাতে না লাগে তাই ইমেজের একটু উপরে সরানো হয়েছে)
+    // 4. Photo Credit (ছবির ভেতরে ডান পাশে)
     ctx.fillStyle = '#FFFFFF'
-    ctx.font = 'bold 22px Arial'
-    ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 8;
-    ctx.fillText(photoCredit, 40, imageBottomLimit - 30)
+    ctx.font = 'bold 20px Arial'
+    ctx.textAlign = 'right'
+    ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = 6;
+    ctx.fillText(photoCredit, W - 40, imageAreaHeight - 30)
     ctx.shadowBlur = 0
+    ctx.textAlign = 'left' // Reset
 
-    // 5. Category & Date
-    const contentY = imageBottomLimit + 70
+    // 5. Text Content Area (নিচের অংশ)
+    const contentY = imageAreaHeight + 70
     ctx.textBaseline = 'top'
-    ctx.textAlign = 'left'
     
+    // Category & Date
     ctx.fillStyle = '#EF4444'
     ctx.font = 'bold 32px Arial'
     ctx.fillText(category.toUpperCase(), 60, contentY)
@@ -161,11 +163,11 @@ export default function PhotocardGenerator() {
     ctx.font = '24px Arial'
     ctx.fillText(date, 60, contentY + 45)
 
-    // 6. Headline
+    // Headline
     const headY = contentY + 115
     const headHeight = drawHeadline(ctx, headline, 60, headY, W - 120, headlineSize * 1.3)
 
-    // 7. Subtext
+    // Subtext
     if (subtext) {
       ctx.fillStyle = template === 'minimal' ? '#475569' : '#cbd5e1'
       ctx.font = '34px Arial'
@@ -191,65 +193,46 @@ export default function PhotocardGenerator() {
   useEffect(() => { render() }, [render])
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] text-slate-900">
-      <header className="bg-white border-b sticky top-0 z-30 px-8 h-16 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-2">
-          <Newspaper className="text-red-600 w-6 h-6" />
-          <h1 className="text-xl font-black">টংগের<span className="text-red-600">খবর</span></h1>
-        </div>
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <header className="bg-white/70 backdrop-blur-md border-b sticky top-0 z-30 px-10 h-16 flex items-center justify-between">
+        <h1 className="text-xl font-black">টংগের<span className="text-red-600">খবর</span></h1>
         <button onClick={() => {
           const link = document.createElement('a')
-          link.download = `card_${Date.now()}.png`
+          link.download = `card.png`
           link.href = canvasRef.current?.toDataURL('image/png', 1.0) || ''
           link.click()
-        }} className="bg-red-600 text-white px-6 py-2 rounded-xl font-bold flex items-center gap-2 transition-transform active:scale-95 shadow-md">
-          <Download className="w-4 h-4" /> ডাউনলোড
+        }} className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 rounded-xl font-bold transition-all shadow-lg active:scale-95">
+          ডাউনলোড করুন
         </button>
       </header>
 
-      <main className="max-w-7xl mx-auto p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <main className="max-w-7xl mx-auto p-10 grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b pb-4">
-               <span className="text-xs font-black uppercase text-slate-400">ইমেজ সেটিংস</span>
-               <button onClick={() => {setImagePos({x:0, y:0}); setImageZoom(1)}} className="text-slate-400 hover:text-red-600 transition-colors">
-                  <RefreshCw className="w-4 h-4" />
-               </button>
+          <div className="bg-white p-8 rounded-[2.5rem] border shadow-sm space-y-6">
+            <input ref={fileInputRef} type="file" hidden onChange={handleImageUpload} />
+            <button onClick={() => fileInputRef.current?.click()} className="w-full py-10 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold hover:bg-slate-50 transition-colors">
+               + ইমেজ আপলোড
+            </button>
+            <div className="grid grid-cols-2 gap-4">
+               <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
+               <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
             </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">জুম</label>
-                <input type="range" min="1" max="4" step="0.01" value={imageZoom} onChange={e => setImageZoom(parseFloat(e.target.value))} className="w-full accent-red-600" />
-              </div>
-              <input ref={fileInputRef} type="file" hidden onChange={handleImageUpload} />
-              <button onClick={() => fileInputRef.current?.click()} className="w-full py-6 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-bold text-sm hover:bg-slate-50">
-                + নতুন ছবি দিন
-              </button>
-            </div>
-
-            <div className="space-y-3">
-               <div className="grid grid-cols-2 gap-3">
-                  <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 p-3.5 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
-                  <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 p-3.5 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
-               </div>
-               <textarea rows={2} placeholder="শিরোনাম" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 p-3.5 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500 font-bold" />
-               <textarea rows={2} placeholder="উপ-শিরোনাম" value={subtext} onChange={e => setSubtext(e.target.value)} className="w-full bg-slate-50 p-3.5 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
-               <input type="text" placeholder="ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 p-3.5 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
-            </div>
+            <textarea placeholder="শিরোনাম (***বোল্ড***)" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500 font-bold" rows={3} />
+            <textarea placeholder="সাবটেক্সট" value={subtext} onChange={e => setSubtext(e.target.value)} className="w-full bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" rows={2} />
+            <input type="text" placeholder="ছবি ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-red-500" />
           </div>
-
-          <div className="bg-white p-2.5 rounded-2xl shadow-sm border flex gap-2">
-             <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase ${template === 'minimal' ? 'bg-slate-900 text-white' : 'text-slate-400'}`}>White</button>
-             <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-xl font-bold text-xs uppercase ${template === 'dark_overlay' ? 'bg-red-600 text-white' : 'text-slate-400'}`}>Dark</button>
+          
+          <div className="bg-slate-900 p-2 rounded-2xl flex">
+             <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-xl font-bold text-xs ${template === 'minimal' ? 'bg-white text-slate-900 shadow' : 'text-slate-400'}`}>WHITE</button>
+             <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-xl font-bold text-xs ${template === 'dark_overlay' ? 'bg-red-600 text-white shadow' : 'text-slate-400'}`}>DARK</button>
           </div>
         </div>
 
         <div className="lg:col-span-7 flex justify-center">
-          <div className="sticky top-28 w-full max-w-[480px]">
-            <div className="bg-white p-3 rounded-[2.8rem] shadow-2xl border">
-               <canvas ref={canvasRef} className="w-full h-auto rounded-[2.3rem]" />
-            </div>
+          <div className="sticky top-28 w-full max-w-[500px]">
+             <div className="bg-white p-4 rounded-[3.5rem] shadow-2xl border">
+                <canvas ref={canvasRef} className="w-full h-auto rounded-[2.8rem]" />
+             </div>
           </div>
         </div>
       </main>
