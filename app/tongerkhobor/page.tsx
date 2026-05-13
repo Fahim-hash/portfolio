@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Upload, Download, RotateCcw, Layout, Image as ImageIcon, Type, Settings2, Sparkles, Newspaper, Move } from 'lucide-react'
+import { Download, Image as ImageIcon, Sparkles, Newspaper, Move } from 'lucide-react'
 
 type Template = 'minimal' | 'dark_overlay'
 
@@ -17,7 +17,7 @@ export default function PhotocardGenerator() {
   const [imagePos, setImagePos] = useState({ x: 0, y: 0 })
   const [imageZoom, setImageZoom] = useState(1)
   
-  const [headlineSize, setHeadlineSize] = useState(48)
+  const [headlineSize, setHeadlineSize] = useState(54) // একটু বড় ফন্ট সাইজ
   const [showWatermark, setShowWatermark] = useState(true)
   const [logoImg, setLogoImg] = useState<HTMLImageElement | null>(null)
 
@@ -47,41 +47,39 @@ export default function PhotocardGenerator() {
     }
   }
 
-  const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
+  // ফিক্সড র‍্যাপ টেক্সট ফাংশন
+  const drawHeadline = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
     const words = text.split(' ')
+    let lines: { text: string; isBold: boolean }[][] = [[]]
+    let currentLineWidth = 0
     let lineIdx = 0
-    const lines: { text: string; isBold: boolean }[][] = [[]]
-    let testLine = ""
 
-    for (let n = 0; n < words.length; n++) {
-      const wordClean = words[n].replace(/\*\*\*/g, '')
-      const testLineWithWord = testLine + wordClean + " "
-      const metrics = ctx.measureText(testLineWithWord)
-      
-      if (metrics.width > maxWidth && n > 0) {
-        lines.push([])
+    ctx.font = `bold ${headlineSize}px 'Arial', sans-serif`
+
+    words.forEach((word) => {
+      const isBold = word.includes('***')
+      const cleanWord = word.replace(/\*\*\*/g, '')
+      const wordWidth = ctx.measureText(cleanWord + ' ').width
+
+      if (currentLineWidth + wordWidth > maxWidth) {
         lineIdx++
-        testLine = wordClean + " "
-      } else {
-        testLine = testLineWithWord
+        lines[lineIdx] = []
+        currentLineWidth = 0
       }
-      
-      const isHighlighted = words[n].startsWith('***') || (n > 0 && words[n-1].includes('***') && !words[n-1].endsWith('***'))
-      lines[lineIdx].push({ 
-        text: words[n].replace(/\*\*\*/g, ''), 
-        isBold: words[n].includes('***') || isHighlighted 
-      })
-    }
+
+      lines[lineIdx].push({ text: cleanWord, isBold })
+      currentLineWidth += wordWidth
+    })
 
     lines.forEach((line, i) => {
-      let currentX = x
+      let startX = x
       line.forEach((word) => {
         ctx.fillStyle = word.isBold ? '#EF4444' : (template === 'minimal' ? '#111827' : '#FFFFFF')
-        ctx.font = `bold ${headlineSize}px 'Arial', sans-serif`
-        ctx.fillText(word.text + " ", currentX, y + (i * lineHeight))
-        currentX += ctx.measureText(word.text + " ").width
+        ctx.fillText(word.text + ' ', startX, y + (i * lineHeight))
+        startX += ctx.measureText(word.text + ' ').width
       })
     })
+
     return lines.length * lineHeight
   }
 
@@ -134,56 +132,57 @@ export default function PhotocardGenerator() {
 
     // 3. Category & Date
     const contentY = (H * 0.55) + 80
+    ctx.textBaseline = 'top'
+    ctx.textAlign = 'left'
+    
     ctx.fillStyle = '#EF4444'
-    ctx.font = 'bold 28px Arial'
+    ctx.font = 'bold 30px Arial'
     ctx.fillText(category.toUpperCase(), 60, contentY)
 
     ctx.fillStyle = template === 'minimal' ? '#6B7280' : '#9CA3AF'
-    ctx.font = '22px Arial'
+    ctx.font = '24px Arial'
     ctx.fillText(date, 60, contentY + 45)
 
-    // 4. Headline
-    ctx.textBaseline = 'top'
-    const headHeight = wrapText(ctx, headline, 60, contentY + 100, W - 120, headlineSize * 1.3)
+    // 4. Headline (Fixed)
+    const headY = contentY + 110
+    const headHeight = drawHeadline(ctx, headline, 60, headY, W - 120, headlineSize * 1.3)
 
     // 5. Subtext
     if (subtext) {
       ctx.fillStyle = template === 'minimal' ? '#4B5563' : '#D1D5DB'
-      ctx.font = '32px Arial'
-      let words = subtext.split(' '), line = '', subY = contentY + 110 + headHeight
-      for(let n=0; n<words.length; n++){
-        if(ctx.measureText(line + words[n]).width > W-120){
-          ctx.fillText(line, 60, subY); line = words[n] + ' '; subY += 50;
-        } else line += words[n] + ' '
-      }
-      ctx.fillText(line, 60, subY)
+      ctx.font = '34px Arial'
+      const words = subtext.split(' ')
+      let line = ''
+      let subTextY = headY + headHeight + 20
+      
+      words.forEach(word => {
+        const testLine = line + word + ' '
+        if (ctx.measureText(testLine).width > W - 120) {
+          ctx.fillText(line, 60, subTextY)
+          line = word + ' '
+          subTextY += 50
+        } else {
+          line = testLine
+        }
+      })
+      ctx.fillText(line, 60, subTextY)
     }
 
-    // 6. Watermark / Official Logo (Black/White Logic)
+    // 6. Watermark / Logo
     if (showWatermark && logoImg) {
       ctx.save()
-      // যদি হোয়াইট টেমপ্লেট হয়, লোগোকে কালো করার জন্য ইনভার্ট ফিল্টার
-      if (template === 'minimal') {
-        ctx.filter = 'invert(1) contrast(200%)' 
-      }
-      
+      if (template === 'minimal') ctx.filter = 'invert(1) contrast(200%)'
       const logoW = 200
       const logoH = (logoImg.height / logoImg.width) * logoW
       ctx.drawImage(logoImg, W - logoW - 60, H - logoH - 60, logoW, logoH)
       ctx.restore()
-    } else if (showWatermark) {
-        ctx.fillStyle = template === 'minimal' ? '#000000' : '#EF4444'
-        ctx.font = 'black 40px Arial'
-        ctx.textAlign = 'right'
-        ctx.fillText('টংগেরখবর', W - 60, H - 70)
     }
 
     // 7. Photo Credit
-    ctx.textAlign = 'left'
     ctx.fillStyle = '#FFFFFF'
-    ctx.font = 'bold 20px Arial'
-    ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 4;
-    ctx.fillText(photoCredit, 30, (H * 0.55) - 30)
+    ctx.font = 'bold 22px Arial'
+    ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 6;
+    ctx.fillText(photoCredit, 40, (H * 0.55) - 45)
     ctx.shadowBlur = 0
 
   }, [template, category, date, headline, subtext, photoCredit, image, imagePos, imageZoom, headlineSize, showWatermark, logoImg])
@@ -191,90 +190,69 @@ export default function PhotocardGenerator() {
   useEffect(() => { render() }, [render])
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] text-slate-900">
-      <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Newspaper className="text-red-600 w-8 h-8" />
-            <h1 className="text-2xl font-black tracking-tighter uppercase">টংগের<span className="text-red-600">খবর</span></h1>
-          </div>
-          <button onClick={() => {
-            const link = document.createElement('a')
-            link.download = 'tongerkhobor-news.png'
-            link.href = canvasRef.current?.toDataURL('image/png', 1.0) || ''
-            link.click()
-          }} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-200 transition-all active:scale-95">
-            <Download className="w-5 h-5" /> ডাউনলোড
-          </button>
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900">
+      <header className="bg-white border-b sticky top-0 z-20 px-6 h-16 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-2">
+          <Newspaper className="text-red-600 w-7 h-7" />
+          <h1 className="text-xl font-black">টংগের<span className="text-red-600">খবর</span></h1>
         </div>
+        <button onClick={() => {
+          const link = document.createElement('a')
+          link.download = 'news-card.png'
+          link.href = canvasRef.current?.toDataURL('image/png', 1.0) || ''
+          link.click()
+        }} className="bg-red-600 text-white px-5 py-2 rounded-xl font-bold flex items-center gap-2 text-sm">
+          <Download className="w-4 h-4" /> ডাউনলোড
+        </button>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-5 space-y-6">
-          
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-            <div className="flex items-center gap-2 mb-6 text-red-600">
-              <Move className="w-5 h-5" />
-              <h2 className="font-bold uppercase text-sm tracking-widest">ফটো অ্যাডজাস্টমেন্ট</h2>
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+            <div className="flex items-center gap-2 text-red-600 border-b pb-3">
+              <Move className="w-4 h-4" />
+              <span className="text-xs font-black uppercase tracking-widest">কন্ট্রোল প্যানেল</span>
             </div>
-            <div className="space-y-5">
+            
+            <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-400 uppercase block mb-3">জুম</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">ফটো জুম</label>
                 <input type="range" min="1" max="3" step="0.01" value={imageZoom} onChange={e => setImageZoom(parseFloat(e.target.value))} className="w-full accent-red-600" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase block mb-3">X পজিশন</label>
-                  <input type="range" min="-600" max="600" value={imagePos.x} onChange={e => setImagePos(prev => ({...prev, x: parseInt(e.target.value)}))} className="w-full accent-slate-600" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase block mb-3">Y পজিশন</label>
-                  <input type="range" min="-600" max="600" value={imagePos.y} onChange={e => setImagePos(prev => ({...prev, y: parseInt(e.target.value)}))} className="w-full accent-slate-600" />
-                </div>
+                <button onClick={() => setImagePos(p => ({...p, x: p.x - 20}))} className="bg-slate-100 p-2 rounded-lg text-xs font-bold">Left</button>
+                <button onClick={() => setImagePos(p => ({...p, x: p.x + 20}))} className="bg-slate-100 p-2 rounded-lg text-xs font-bold">Right</button>
               </div>
-              <button onClick={() => {setImagePos({x:0, y:0}); setImageZoom(1)}} className="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all uppercase tracking-widest">রিসেট করুন</button>
             </div>
-          </div>
 
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
             <input ref={fileInputRef} type="file" hidden onChange={handleImageUpload} />
-            <button onClick={() => fileInputRef.current?.click()} className="w-full h-32 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-red-50 hover:border-red-200 transition-all group">
-              <ImageIcon className="w-8 h-8 text-slate-300 group-hover:text-red-400" />
-              <span className="text-sm font-bold text-slate-500">ছবি পরিবর্তন করুন</span>
+            <button onClick={() => fileInputRef.current?.click()} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-bold text-sm hover:bg-slate-50 transition-all">
+              + ছবি আপলোড করুন
             </button>
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
-               <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 font-bold" />
-               <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500" />
+            <div className="grid grid-cols-2 gap-3">
+               <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
+               <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
             </div>
-            <textarea rows={2} placeholder="শিরোনাম..." value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 font-bold" />
-            <textarea rows={3} placeholder="উপ-শিরোনাম..." value={subtext} onChange={e => setSubtext(e.target.value)} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 text-sm" />
-            <input type="text" placeholder="ছবির ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500" />
+            <textarea rows={2} placeholder="শিরোনাম (বোল্ড করতে ***ব্যবহার করুন***)" value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500 font-bold" />
+            <textarea rows={2} placeholder="উপ-শিরোনাম" value={subtext} onChange={e => setSubtext(e.target.value)} className="w-full bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
+            <input type="text" placeholder="ছবি ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 p-3 rounded-xl text-sm border-none ring-1 ring-slate-200 focus:ring-red-500" />
           </div>
 
-          <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-200">
-            <div className="flex gap-3">
-              <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-2xl font-bold transition-all ${template === 'minimal' ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>হোয়াইট</button>
-              <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-2xl font-bold transition-all ${template === 'dark_overlay' ? 'bg-black text-white shadow-lg shadow-slate-300' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>ডার্ক</button>
-            </div>
+          <div className="flex gap-3">
+             <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-2xl font-bold text-sm border-2 ${template === 'minimal' ? 'border-red-600 bg-red-50 text-red-600' : 'border-transparent bg-white shadow-sm'}`}>হোয়াইট মোড</button>
+             <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-2xl font-bold text-sm border-2 ${template === 'dark_overlay' ? 'border-red-600 bg-red-50 text-red-600' : 'border-transparent bg-white shadow-sm'}`}>ডার্ক মোড</button>
           </div>
         </div>
 
-        <div className="lg:col-span-7 flex flex-col items-center">
-          <div className="sticky top-24 w-full flex flex-col items-center">
-            <div className="w-full flex justify-between items-end mb-4 px-4">
-               <div>
-                 <h2 className="text-xl font-black flex items-center gap-2 tracking-tighter">লাইভ প্রিভিউ</h2>
-                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">High Definition Output</p>
-               </div>
-               <div className="flex gap-1.5 bg-white p-2 rounded-full shadow-sm border">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
-               </div>
+        <div className="lg:col-span-7 flex justify-center">
+          <div className="sticky top-24 w-fit">
+            <div className="mb-4 flex items-center justify-between px-2">
+              <h2 className="text-sm font-bold flex items-center gap-2"><Sparkles className="w-4 h-4 text-yellow-500"/> প্রিভিউ</h2>
+              <span className="text-[10px] text-slate-400 font-bold">1080 x 1350</span>
             </div>
-            <div className="bg-white p-3 rounded-[3rem] shadow-2xl border border-slate-100">
-               <canvas ref={canvasRef} className="w-full h-auto rounded-[2.5rem] shadow-sm" style={{ maxWidth: '480px' }} />
+            <div className="bg-white p-3 rounded-[2.5rem] shadow-2xl shadow-slate-200 border">
+              <canvas ref={canvasRef} className="w-full h-auto rounded-[2rem]" style={{ maxWidth: '420px' }} />
             </div>
           </div>
         </div>
