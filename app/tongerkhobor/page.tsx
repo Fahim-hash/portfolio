@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Upload, Download, RotateCcw, Layout, Image as ImageIcon, Type, Settings2, Sparkles, Newspaper, ArrowsMaximize, Move } from 'lucide-react'
+import { Upload, Download, RotateCcw, Layout, Image as ImageIcon, Type, Settings2, Sparkles, Newspaper, Move } from 'lucide-react'
 
 type Template = 'minimal' | 'dark_overlay'
 
@@ -14,7 +14,6 @@ export default function PhotocardGenerator() {
   const [photoCredit, setPhotoCredit] = useState('ছবি: সংগৃহীত')
   const [image, setImage] = useState<HTMLImageElement | null>(null)
   
-  // Image Controls
   const [imagePos, setImagePos] = useState({ x: 0, y: 0 })
   const [imageZoom, setImageZoom] = useState(1)
   
@@ -25,10 +24,9 @@ export default function PhotocardGenerator() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // লোগো লোড করা (public/logo.png থেকে)
   useEffect(() => {
     const img = new Image()
-    img.src = '/logo.png' // আপনার লোগোর নাম logo.png হতে হবে
+    img.src = '/logo.png' 
     img.onload = () => setLogoImg(img)
   }, [])
 
@@ -40,7 +38,7 @@ export default function PhotocardGenerator() {
         const img = new Image()
         img.onload = () => {
           setImage(img)
-          setImagePos({ x: 0, y: 0 }) // রিসেট পজিশন
+          setImagePos({ x: 0, y: 0 })
           setImageZoom(1)
         }
         img.src = event.target?.result as string
@@ -102,7 +100,7 @@ export default function PhotocardGenerator() {
     ctx.fillStyle = template === 'minimal' ? '#FFFFFF' : '#000000'
     ctx.fillRect(0, 0, W, H)
 
-    // 2. Image Drawing with Custom Position/Zoom
+    // 2. Image Drawing
     if (image) {
       const targetH = H * 0.55
       const imgRatio = image.width / image.height
@@ -119,7 +117,6 @@ export default function PhotocardGenerator() {
       ctx.rect(0, 0, W, targetH)
       ctx.clip()
       
-      // পজিশন ক্যালকুলেশন
       const x = (W - drawW) / 2 + imagePos.x
       const y = (targetH - drawH) / 2 + imagePos.y
       
@@ -162,13 +159,20 @@ export default function PhotocardGenerator() {
       ctx.fillText(line, 60, subY)
     }
 
-    // 6. Watermark / Official Logo
+    // 6. Watermark / Official Logo (Black/White Logic)
     if (showWatermark && logoImg) {
+      ctx.save()
+      // যদি হোয়াইট টেমপ্লেট হয়, লোগোকে কালো করার জন্য ইনভার্ট ফিল্টার
+      if (template === 'minimal') {
+        ctx.filter = 'invert(1) contrast(200%)' 
+      }
+      
       const logoW = 200
       const logoH = (logoImg.height / logoImg.width) * logoW
       ctx.drawImage(logoImg, W - logoW - 60, H - logoH - 60, logoW, logoH)
+      ctx.restore()
     } else if (showWatermark) {
-        ctx.fillStyle = '#EF4444'
+        ctx.fillStyle = template === 'minimal' ? '#000000' : '#EF4444'
         ctx.font = 'black 40px Arial'
         ctx.textAlign = 'right'
         ctx.fillText('টংগেরখবর', W - 60, H - 70)
@@ -192,7 +196,7 @@ export default function PhotocardGenerator() {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Newspaper className="text-red-600 w-8 h-8" />
-            <h1 className="text-2xl font-black tracking-tighter">টংগের<span className="text-red-600">খবর</span></h1>
+            <h1 className="text-2xl font-black tracking-tighter uppercase">টংগের<span className="text-red-600">খবর</span></h1>
           </div>
           <button onClick={() => {
             const link = document.createElement('a')
@@ -208,28 +212,27 @@ export default function PhotocardGenerator() {
       <main className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-5 space-y-6">
           
-          {/* ইমেজ পজিশন কন্ট্রোল */}
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
             <div className="flex items-center gap-2 mb-6 text-red-600">
               <Move className="w-5 h-5" />
-              <h2 className="font-bold uppercase text-sm tracking-widest">ফটো পজিশন ও জুম</h2>
+              <h2 className="font-bold uppercase text-sm tracking-widest">ফটো অ্যাডজাস্টমেন্ট</h2>
             </div>
             <div className="space-y-5">
               <div>
-                <label className="text-xs font-bold text-slate-400 uppercase block mb-3">জুম লেভেল</label>
+                <label className="text-xs font-bold text-slate-400 uppercase block mb-3">জুম</label>
                 <input type="range" min="1" max="3" step="0.01" value={imageZoom} onChange={e => setImageZoom(parseFloat(e.target.value))} className="w-full accent-red-600" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase block mb-3">ডানে - বামে</label>
-                  <input type="range" min="-500" max="500" value={imagePos.x} onChange={e => setImagePos(prev => ({...prev, x: parseInt(e.target.value)}))} className="w-full accent-slate-600" />
+                  <label className="text-xs font-bold text-slate-400 uppercase block mb-3">X পজিশন</label>
+                  <input type="range" min="-600" max="600" value={imagePos.x} onChange={e => setImagePos(prev => ({...prev, x: parseInt(e.target.value)}))} className="w-full accent-slate-600" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase block mb-3">উপরে - নিচে</label>
-                  <input type="range" min="-500" max="500" value={imagePos.y} onChange={e => setImagePos(prev => ({...prev, y: parseInt(e.target.value)}))} className="w-full accent-slate-600" />
+                  <label className="text-xs font-bold text-slate-400 uppercase block mb-3">Y পজিশন</label>
+                  <input type="range" min="-600" max="600" value={imagePos.y} onChange={e => setImagePos(prev => ({...prev, y: parseInt(e.target.value)}))} className="w-full accent-slate-600" />
                 </div>
               </div>
-              <button onClick={() => {setImagePos({x:0, y:0}); setImageZoom(1)}} className="w-full py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-200 transition-all">রিসেট পজিশন</button>
+              <button onClick={() => {setImagePos({x:0, y:0}); setImageZoom(1)}} className="w-full py-2.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-bold hover:bg-slate-200 transition-all uppercase tracking-widest">রিসেট করুন</button>
             </div>
           </div>
 
@@ -241,7 +244,7 @@ export default function PhotocardGenerator() {
             </button>
 
             <div className="grid grid-cols-2 gap-3 pt-2">
-               <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500" />
+               <input type="text" placeholder="বিভাগ" value={category} onChange={e => setCategory(e.target.value)} className="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 font-bold" />
                <input type="text" placeholder="তারিখ" value={date} onChange={e => setDate(e.target.value)} className="bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500" />
             </div>
             <textarea rows={2} placeholder="শিরোনাম..." value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 font-bold" />
@@ -249,29 +252,29 @@ export default function PhotocardGenerator() {
             <input type="text" placeholder="ছবির ক্রেডিট" value={photoCredit} onChange={e => setPhotoCredit(e.target.value)} className="w-full bg-slate-50 border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500" />
           </div>
 
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-            <div className="flex gap-4">
-              <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-xl font-bold border-2 transition-all ${template === 'minimal' ? 'border-red-500 bg-red-50 text-red-600' : 'border-slate-50 bg-slate-50'}`}>হোয়াইট</button>
-              <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-xl font-bold border-2 transition-all ${template === 'dark_overlay' ? 'border-red-500 bg-red-50 text-red-600' : 'border-slate-50 bg-slate-50'}`}>ডার্ক</button>
+          <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-200">
+            <div className="flex gap-3">
+              <button onClick={() => setTemplate('minimal')} className={`flex-1 py-3 rounded-2xl font-bold transition-all ${template === 'minimal' ? 'bg-red-600 text-white shadow-lg shadow-red-200' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>হোয়াইট</button>
+              <button onClick={() => setTemplate('dark_overlay')} className={`flex-1 py-3 rounded-2xl font-bold transition-all ${template === 'dark_overlay' ? 'bg-black text-white shadow-lg shadow-slate-300' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>ডার্ক</button>
             </div>
           </div>
         </div>
 
         <div className="lg:col-span-7 flex flex-col items-center">
           <div className="sticky top-24 w-full flex flex-col items-center">
-            <div className="w-full flex justify-between items-end mb-4 px-2">
+            <div className="w-full flex justify-between items-end mb-4 px-4">
                <div>
-                 <h2 className="text-xl font-black flex items-center gap-2"><Sparkles className="text-yellow-500 w-5 h-5"/> প্রিভিউ</h2>
-                 <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter">1080 x 1350 (4:5 Ratio)</p>
+                 <h2 className="text-xl font-black flex items-center gap-2 tracking-tighter">লাইভ প্রিভিউ</h2>
+                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">High Definition Output</p>
                </div>
-               <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+               <div className="flex gap-1.5 bg-white p-2 rounded-full shadow-sm border">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
                </div>
             </div>
-            <div className="bg-white p-3 rounded-[2.5rem] shadow-2xl border border-white">
-               <canvas ref={canvasRef} className="w-full h-auto rounded-[2rem] shadow-sm transition-all" style={{ maxWidth: '500px' }} />
+            <div className="bg-white p-3 rounded-[3rem] shadow-2xl border border-slate-100">
+               <canvas ref={canvasRef} className="w-full h-auto rounded-[2.5rem] shadow-sm" style={{ maxWidth: '480px' }} />
             </div>
           </div>
         </div>
