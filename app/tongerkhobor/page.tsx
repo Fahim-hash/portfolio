@@ -1,196 +1,247 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Download, Camera, Sliders, Type, RotateCcw } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Camera, Calendar, Tag, Type, Share2, Sparkles, Download, Globe, RefreshCcw } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
-export default function TongerKhoborFinal() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
-
-  // Content
-  const [headline, setHeadline] = useState('টংগেরখবর-এর নতুন এআই ভিত্তিক নিউজ জেনারেটর এখন সবার জন্য উন্মুক্ত');
-  const [subHeadline, setSubHeadline] = useState('উন্নত গ্রাফিক্স এবং কাস্টমাইজেশন ফিচারের মাধ্যমে এখন যেকোনো সংবাদ মুহূর্তেই কার্ড আকারে প্রকাশ করা সম্ভব।');
-  const [category, setCategory] = useState('আন্তর্জাতিক');
-  const [date, setDate] = useState('মে ১৪, ২০২৬');
-  const [credit, setCredit] = useState('ছবি: সংগৃহীত/টংগেরখবর');
+export default function NewsCardGenerator() {
+  const [headline, setHeadline] = useState("বাংলাদেশের বাজারে এলো নতুন প্রযুক্তির স্মার্টফোন");
+  const [subHeadline, setSubHeadline] = useState("সাশ্রয়ী মূল্যে প্রিমিয়াম ফিচারের এই ফোনটি তরুণ প্রজন্মের নজর কেড়েছে। এতে রয়েছে শক্তিশালী প্রসেসর ও উন্নত ক্যামেরা।");
+  const [date, setDate] = useState("মে ১৪, ২০২৬");
+  const [category, setCategory] = useState("প্রযুক্তি");
+  const [image, setImage] = useState("https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1000");
+  const [theme, setTheme] = useState('white'); // white, black, premium, viral
+  const [aiCaption, setAiCaption] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   
-  // Image Stats
-  const [imgObj, setImgObj] = useState<HTMLImageElement | null>(null);
-  const [imgConfig, setImgConfig] = useState({ zoom: 1.1, x: 0, y: 0, bright: 100 });
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  const draw = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  // AI Caption & Mock News Fetch Logic
+  const handleAIFetch = async () => {
+    setIsGenerating(true);
+    // এখানে আপনি ভবিষ্যতে OpenAI বা Gemini API ইন্টিগ্রেট করতে পারবেন
+    setTimeout(() => {
+      const generatedText = `📌 ${headline}\n\n${subHeadline}\n\n#BreakingNews #Bangladesh #Update #${category}`;
+      setAiCaption(generatedText);
+      setIsGenerating(false);
+    }, 1800);
+  };
 
-    // Exact 4:5 Portrait High-Res
-    const W = 1080;
-    const H = 1350;
-    canvas.width = W;
-    canvas.height = H;
-
-    // 1. Fill Dark Base (Matching image_a3cf58.png palette)
-    ctx.fillStyle = '#0a0f1d'; 
-    ctx.fillRect(0, 0, W, H);
-
-    // 2. Main Image Logic (Top Position)
-    const imgHeight = 920; 
-    if (imgObj) {
-      ctx.save();
-      ctx.rect(0, 0, W, imgHeight);
-      ctx.clip();
-      
-      ctx.filter = `brightness(${imgConfig.bright}%)`;
-      const ratio = imgObj.width / imgObj.height;
-      let dW = W * imgConfig.zoom;
-      let dH = (W / ratio) * imgConfig.zoom;
-      
-      ctx.drawImage(imgObj, (W - dW) / 2 + imgConfig.x, (imgHeight - dH) / 2 + imgConfig.y, dW, dH);
-      ctx.restore();
-
-      // 3. Dense Smooth Gradient Overlay
-      const grad = ctx.createLinearGradient(0, 450, 0, imgHeight);
-      grad.addColorStop(0, 'rgba(10, 15, 29, 0)');
-      grad.addColorStop(0.6, 'rgba(10, 15, 29, 0.8)');
-      grad.addColorStop(1, '#0a0f1d');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 450, W, imgHeight - 450 + 5);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) setImage(event.target.result as string);
+      };
+      reader.readAsDataURL(e.target.files[0]);
     }
+  };
 
-    // 4. Branding & Credits
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '24px Arial';
-    ctx.fillText(credit, 50, 60);
-
-    // 5. Typography Layout (Matching the user image exactly)
-    const margin = 70;
-    let textY = 930;
-
-    // Category
-    ctx.fillStyle = '#f43f5e'; // Vibrant Rose
-    ctx.font = 'bold 42px Arial';
-    ctx.fillText(category, margin, textY);
-
-    // Date
-    textY += 60;
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '32px Arial';
-    ctx.fillText(date, margin, textY);
-
-    // Headline (The Big One)
-    textY += 100;
-    ctx.fillStyle = '#ffffff';
-    const hSize = 72;
-    ctx.font = `bold ${hSize}px Arial`;
-    
-    const wrapText = (text: string, maxWidth: number) => {
-      const words = text.split(' ');
-      let lines = [];
-      let currentLine = words[0];
-      for (let i = 1; i < words.length; i++) {
-        let testLine = currentLine + " " + words[i];
-        if (ctx.measureText(testLine).width < maxWidth) {
-          currentLine = testLine;
-        } else {
-          lines.push(currentLine);
-          currentLine = words[i];
-        }
-      }
-      lines.push(currentLine);
-      return lines;
-    };
-
-    const headlineLines = wrapText(headline, W - (margin * 2));
-    headlineLines.forEach((line) => {
-      ctx.fillText(line, margin, textY);
-      textY += hSize * 1.25;
-    });
-
-    // Subtext
-    textY += 20;
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = '38px Arial';
-    const subLines = wrapText(subHeadline, W - (margin * 2));
-    subLines.forEach((line) => {
-      ctx.fillText(line, margin, textY);
-      textY += 55;
-    });
-
-  }, [headline, subHeadline, category, date, credit, imgObj, imgConfig]);
-
-  useEffect(() => { draw(); }, [draw]);
+  const downloadCard = async () => {
+    if (cardRef.current) {
+      const canvas = await html2canvas(cardRef.current, { useCORS: true, scale: 2 });
+      const link = document.createElement('a');
+      link.download = `news-card-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  };
 
   return (
-    <div className="flex h-screen bg-black overflow-hidden font-sans">
-      {/* Control Sidebar */}
-      <aside className="w-[450px] bg-zinc-900 border-r border-zinc-800 p-8 flex flex-col gap-8 overflow-y-auto">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-rose-600 rounded-lg flex items-center justify-center font-black">TK</div>
-          <h1 className="text-xl font-bold tracking-tighter text-white">টংগেরখবর <span className="text-rose-500">PRO</span></h1>
-        </div>
-
-        <div className="space-y-4">
-          <label className="text-xs font-bold text-zinc-500 uppercase">Editorial News Data</label>
-          <input type="text" value={category} onChange={e => setCategory(e.target.value)} className="w-full bg-zinc-800 border-zinc-700 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-rose-600" placeholder="Category" />
-          <textarea value={headline} onChange={e => setHeadline(e.target.value)} className="w-full bg-zinc-800 border-zinc-700 p-3 rounded-xl text-white outline-none h-28 text-lg font-bold" placeholder="Headline" />
-          <textarea value={subHeadline} onChange={e => setSubHeadline(e.target.value)} className="w-full bg-zinc-800 border-zinc-700 p-3 rounded-xl text-zinc-300 outline-none h-24" placeholder="Sub-headline" />
-        </div>
-
-        <div className="space-y-4">
-          <label className="text-xs font-bold text-zinc-500 uppercase">Visual Settings</label>
-          <button onClick={() => fileInput.current?.click()} className="w-full bg-white text-black py-4 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all">
-            <Camera size={20}/> REPLACE MAIN PHOTO
-          </button>
-          <input type="file" ref={fileInput} hidden onChange={(e) => {
-            const file = e.target.files?.[0];
-            if(file) {
-              const img = new Image();
-              img.onload = () => setImgObj(img);
-              img.src = URL.createObjectURL(file);
-            }
-          }} />
-
-          {imgObj && (
-            <div className="bg-zinc-800/50 p-5 rounded-2xl border border-zinc-700 space-y-5">
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs text-zinc-400 font-bold"><span>ZOOM</span><span>{Math.round(imgConfig.zoom * 100)}%</span></div>
-                <input type="range" min="0.5" max="3" step="0.01" value={imgConfig.zoom} onChange={e => setImgConfig(s => ({...s, zoom: parseFloat(e.target.value)}))} className="w-full accent-rose-600" />
+    <div className="min-h-screen bg-[#f0f2f5] p-4 md:p-8 font-sans text-slate-900">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* --- Left Side: Controls (40%) --- */}
+        <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 border-b pb-3">
+              <RefreshCcw size={20} className="text-blue-600" /> কার্ড এডিটর
+            </h2>
+            
+            <div className="space-y-5">
+              {/* Theme Selector */}
+              <div>
+                <label className="block text-sm font-bold mb-3 text-slate-700">টেম্পলেট সিলেক্ট করুন</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { id: 'white', label: 'Light' },
+                    { id: 'black', label: 'Dark' },
+                    { id: 'premium', label: 'Premium' },
+                    { id: 'viral', label: 'Viral' }
+                  ].map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => setTheme(t.id)}
+                      className={`py-2 text-xs font-semibold rounded-lg border transition-all ${theme === t.id ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white hover:bg-slate-50 text-slate-600'}`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs text-zinc-400 font-bold"><span>BRIGHTNESS</span><span>{imgConfig.bright}%</span></div>
-                <input type="range" min="50" max="150" value={imgConfig.bright} onChange={e => setImgConfig(s => ({...s, bright: parseInt(e.target.value)}))} className="w-full accent-amber-500" />
+
+              {/* Inputs */}
+              <div className="space-y-4">
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-1">
+                    <Type size={16} /> শিরোনাম (Headline)
+                  </label>
+                  <input 
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    value={headline}
+                    onChange={(e) => setHeadline(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-1">
+                    <Type size={16} /> বিস্তারিত (Sub-headline)
+                  </label>
+                  <textarea 
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all h-24"
+                    value={subHeadline}
+                    onChange={(e) => setSubHeadline(e.target.value)}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-bold text-slate-700 mb-1 block">বিভাগ</label>
+                    <input 
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-bold text-slate-700 mb-1 block">তারিখ</label>
+                    <input 
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
+                    <Camera size={16} /> ছবি আপলোড
+                  </label>
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* AI Section */}
+              <div className="mt-4 p-4 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl text-white shadow-lg shadow-indigo-200">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 font-bold text-sm">
+                    <Sparkles size={18} /> AI ম্যাজিক
+                  </div>
+                  <button 
+                    onClick={handleAIFetch}
+                    disabled={isGenerating}
+                    className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold transition-all disabled:opacity-50"
+                  >
+                    {isGenerating ? "ফেচ হচ্ছে..." : "অটো জেনারেট"}
+                  </button>
+                </div>
+                {aiCaption ? (
+                  <div className="bg-white/10 p-3 rounded-xl text-[13px] leading-relaxed border border-white/10 italic">
+                    {aiCaption}
+                  </div>
+                ) : (
+                  <p className="text-[11px] opacity-80 text-center">শিরোনাম থেকে অটোমেটিক ক্যাপশন এবং হ্যাশট্যাগ জেনারেট করুন</p>
+                )}
               </div>
             </div>
-          )}
-        </div>
-
-        <button 
-          onClick={() => {
-            const link = document.createElement('a');
-            link.download = `news-card-${Date.now()}.png`;
-            link.href = canvasRef.current?.toDataURL('image/png', 1.0) || '';
-            link.click();
-          }}
-          className="mt-auto w-full bg-rose-600 text-white py-5 rounded-2xl font-black text-lg shadow-lg shadow-rose-900/20 hover:bg-rose-500 active:scale-95 transition-all"
-        >
-          <Download className="inline mr-2" size={24}/> EXPORT ULTRA HD
-        </button>
-      </aside>
-
-      {/* Preview Area */}
-      <main className="flex-1 bg-[#050505] flex items-center justify-center p-12">
-        <div className="relative group">
-          <div className="absolute -inset-4 bg-rose-600/10 rounded-[3rem] blur-3xl group-hover:bg-rose-600/20 transition-all duration-700"></div>
-          <div className="relative bg-zinc-900 p-2 rounded-[2rem] shadow-2xl overflow-hidden border border-zinc-800">
-            <canvas 
-              ref={canvasRef} 
-              style={{ width: '450px', height: 'auto', aspectRatio: '1080/1350' }}
-              className="rounded-[1.5rem]"
-            />
           </div>
         </div>
-      </main>
+
+        {/* --- Right Side: Card Preview (60%) --- */}
+        <div className="lg:col-span-7 space-y-6 order-1 lg:order-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <Share2 size={20} className="text-blue-600" /> কার্ড প্রিভিউ
+            </h2>
+            <button 
+              onClick={downloadCard}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition shadow-lg active:scale-95"
+            >
+              <Download size={18} /> ডাউনলোড করুন
+            </button>
+          </div>
+
+          <div className="flex justify-center items-start">
+            <div 
+              ref={cardRef}
+              id="news-card"
+              className={`relative w-full max-w-[500px] aspect-[4/5] overflow-hidden rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] transition-all duration-700
+                ${theme === 'white' ? 'bg-white text-slate-900' : ''}
+                ${theme === 'black' ? 'bg-[#0a0a0a] text-white' : ''}
+                ${theme === 'premium' ? 'bg-gradient-to-br from-[#1a1a1a] to-[#4a4a4a] text-white border-4 border-[#c5a059]' : ''}
+                ${theme === 'viral' ? 'bg-[#ff0000] text-white' : ''}
+              `}
+            >
+              {/* Top Section: Logo & Category */}
+              <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-20">
+                <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm">
+                   <img src="/logo.png" alt="Logo" className="h-7" />
+                </div>
+                <div className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg
+                  ${theme === 'white' ? 'bg-blue-600 text-white' : 'bg-yellow-400 text-black'}`}>
+                  {category}
+                </div>
+              </div>
+
+              {/* News Image */}
+              <div className="h-[55%] relative">
+                <img src={image} alt="News" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent bottom-0"></div>
+              </div>
+
+              {/* Content Section */}
+              <div className="p-8 relative flex flex-col h-[45%] justify-between">
+                <div>
+                  <div className="flex items-center gap-2 opacity-70 text-[11px] font-semibold mb-3">
+                    <Calendar size={12} /> {date} | <Globe size={12} /> অনলাইন ডেস্ক
+                  </div>
+                  <h1 className={`text-2xl md:text-3xl font-black leading-tight mb-4 tracking-tight
+                    ${theme === 'white' ? 'text-slate-900' : 'text-white'}`}>
+                    {headline}
+                  </h1>
+                  <p className={`text-[14px] leading-relaxed opacity-90 line-clamp-2
+                    ${theme === 'white' ? 'text-slate-600' : 'text-slate-300'}`}>
+                    {subHeadline}
+                  </p>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-slate-500/20 flex justify-between items-center opacity-60 text-[10px] font-bold tracking-widest uppercase">
+                  <span>NEWS PORTAL 24</span>
+                  <span className="flex items-center gap-1">LIVE UPDATE <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span></span>
+                </div>
+              </div>
+              
+              {/* Premium Decoration */}
+              {theme === 'premium' && (
+                <div className="absolute top-0 right-0 p-4 opacity-30">
+                  <div className="w-20 h-20 border-r-4 border-t-4 border-[#c5a059]"></div>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+             <p className="text-xs text-blue-800 text-center font-medium">
+               টিপস: হাই-কোয়ালিটি ইমেজের জন্য বড় রেজোলিউশন এর ছবি ব্যবহার করুন।
+             </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
