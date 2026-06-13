@@ -1,12 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { JWT } from 'google-auth-library';
-
-const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID || '1eUwFSLK9l5YUFYKBVH7yMHmcK2xn7RMKX8ZaNQKNfBQ';
-const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL || 'sheets-connector@my-money-tracker-499316.iam.gserviceaccount.com';
-const GOOGLE_PRIVATE_KEY = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
 
 export default function MoneyTracker() {
   const [data, setData] = useState<any[]>([]);
@@ -17,118 +11,58 @@ export default function MoneyTracker() {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 1. Google Sheet theke data read kora
-  const fetchData = async () => {
+  // API theke data fetch kora
+  const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const serviceAccountAuth = new JWT({
-        email: GOOGLE_CLIENT_EMAIL,
-        key: GOOGLE_PRIVATE_KEY,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-      });
-      const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
-      await doc.loadInfo();
-      
-      const sheet = doc.sheetsByTitle['Ledger_Database'] || doc.sheetsByIndex[0];
-      const rows = await sheet.getRows();
-
-      const listItems: any[] = [];
-      let calculatedTotal = 0;
-
-      rows.forEach((row) => {
-        const idVal = row.get('ID');
-        const nameVal = row.get('Name');
-        const amountVal = Number(row.get('Amount')) || 0;
-        const statusVal = row.get('Status');
-        const dateVal = row.get('Date');
-
-        // Total Due er static row skip korbo regular list theke
-        if (nameVal && nameVal.includes('Total Due')) {
-          return; 
-        }
-
-        if (idVal) {
-          listItems.push({
-            _rawRow: row, // reference to update status later
-            id: Number(idVal),
-            name: nameVal,
-            amount: amountVal,
-            status: statusVal,
-            date: dateVal,
-          });
-
-          if (statusVal === 'Unpaid') {
-            calculatedTotal += amountVal;
-          }
-        }
-      });
-
-      setData(listItems);
-      setTotalDue(calculatedTotal);
+      const res = await fetch('/api/due');
+      const result = await res.json();
+      if (result.success) {
+        setData(result.data);
+        setTotalDue(result.totalDue);
+      }
     } catch (err) {
-      console.error("Data load e error:", err);
+      console.error("Failed to fetch data:", err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    loadDashboardData();
   }, []);
 
-  // 2. Total Due line er thik upore dynamic row add kora
+  // New Data Add
   const handleAddEntry = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !amount) return alert('Sob details dao!');
 
     try {
       setLoading(true);
-      const serviceAccountAuth = new JWT({
-        email: GOOGLE_CLIENT_EMAIL,
-        key: GOOGLE_PRIVATE_KEY,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      const res = await fetch('/api/due', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'ADD_ENTRY', name, amount })
       });
-      const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
-      await doc.loadInfo();
-      const sheet = doc.sheetsByTitle['Ledger_Database'] || doc.sheetsByIndex[0];
-      const rows = await sheet.getRows();
-
-      // Find highest ID currently in the sheet
-      const nextId = data.length > 0 ? Math.max(...data.map(d => d.id)) + 1 : 1;
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-
-      // Total Due row er indices match kore thik tar upore add korbo
-      const totalDueRowIndex = rows.findIndex(r => r.get('Name')?.includes('Total Due'));
-      
-      const newRowData = {
-        ID: nextId,
-        Name: name,
-        Amount: Number(amount),
-        Status: 'Unpaid',
-        Date: today
-      };
-
-      if (totalDueRowIndex !== -1) {
-        // Total Due row er thik upore insert korbe
-        await sheet.addRow(newRowData, { insert: true });
+      const result = await res.json();
+      if (result.success) {
+        setName('');
+        setAmount('');
+        await loadDashboardData();
+        alert('Entry successfully saved!');
       } else {
-        await sheet.addRow(newRowData);
+        alert(result.error || 'Failed to save');
       }
-
-      setName('');
-      setAmount('');
-      await fetchData(); // Refresh Dashboard
-      alert('Entry successfully saved to Google Sheet!');
     } catch (err) {
-      alert('Error saving entry');
+      alert('Network error occurred');
     } finally {
       setLoading(false);
     }
   };
 
-  // 3. Secure PIN Verification & Status Update
+  // Status Change Request
   const handleVerifyAndPaid = async (item: any) => {
-    const ADMIN_SECURE_PIN = "0024"; // Tomar master validation code
+    const ADMIN_SECURE_PIN = "0024";
 
     if (pin !== ADMIN_SECURE_PIN) {
       alert("Wrong Secure PIN!");
@@ -137,16 +71,22 @@ export default function MoneyTracker() {
 
     try {
       setLoading(true);
-      const rowToUpdate = item._rawRow;
-      rowToUpdate.set('Status', 'Paid');
-      await rowToUpdate.save();
-
-      setPin('');
-      setActiveId(null);
-      await fetchData(); // UI refresh
-      alert(`Marked ${item.name} as Paid!`);
+      const res = await fetch('/api/due', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MARK_PAID', rowIndex: item.rowIndex })
+      });
+      const result = await res.json();
+      if (result.success) {
+        setPin('');
+        setActiveId(null);
+        await loadDashboardData();
+        alert(`Marked ${item.name} as Paid!`);
+      } else {
+        alert(result.error || 'Failed to update');
+      }
     } catch (err) {
-      alert("Status update fail hoyeche");
+      alert('Network error during status update');
     } finally {
       setLoading(false);
     }
@@ -156,7 +96,7 @@ export default function MoneyTracker() {
     <div className="min-h-screen bg-gray-950 text-gray-100 p-4 font-sans select-none">
       <div className="max-w-md mx-auto space-y-6">
         
-        {/* Header with Total Counter */}
+        {/* Header Box */}
         <header className="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-xl text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl"></div>
           <h1 className="text-xl font-bold tracking-tight text-teal-400">💰 Taka Tracker Dashboard</h1>
@@ -166,14 +106,14 @@ export default function MoneyTracker() {
           </div>
         </header>
 
-        {/* Dynamic Loader */}
+        {/* Sync Loader Status */}
         {loading && (
           <div className="text-center text-xs text-teal-400 animate-pulse bg-teal-500/5 py-2 rounded-lg border border-teal-500/20">
-            Syncing with Google Sheet...
+            Syncing with Cloud...
           </div>
         )}
 
-        {/* Input Form */}
+        {/* Form Entry */}
         <section className="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Notun Entry Add Koro</h2>
           <form onSubmit={handleAddEntry} className="space-y-3">
@@ -203,7 +143,7 @@ export default function MoneyTracker() {
           </form>
         </section>
 
-        {/* Due List */}
+        {/* Database Due List */}
         <section className="bg-gray-900 border border-gray-800 p-5 rounded-2xl shadow-lg">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-3">Baki/Paid Taka-r List</h2>
           
@@ -235,7 +175,7 @@ export default function MoneyTracker() {
                         Paid?
                       </button>
                     ) : (
-                      <div className="flex items-center gap-1.5 bg-gray-950 p-1 rounded-xl border border-gray-800 animate-in fade-in zoom-in duration-150">
+                      <div className="flex items-center gap-1.5 bg-gray-950 p-1 rounded-xl border border-gray-800">
                         <input 
                           type="password" 
                           placeholder="PIN" 
@@ -250,7 +190,7 @@ export default function MoneyTracker() {
                         >
                           OK
                         </button>
-                        <button onClick={() => setActiveId(null)} className="text-gray-400 text-xs px-1 hover:text-white">✕</button>
+                        <button onClick={() => setActiveId(null)} className="text-gray-400 text-xs px-1">✕</button>
                       </div>
                     )}
                   </div>
