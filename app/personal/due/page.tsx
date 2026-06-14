@@ -1,16 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FiArrowUpRight, FiLayers, FiCheck, FiCalendar, FiArrowLeft } from 'react-icons/fi';
+import { 
+  FiArrowUpRight, FiLayers, FiCheck, FiCalendar, FiArrowLeft, 
+  FiSearch, FiFilter, FiActivity, FiCheckCircle, FiTrendingUp 
+} from 'react-icons/fi';
 
 export default function LuxuryLedger() {
   const [data, setData] = useState<any[]>([]);
   const [totalOutstanding, setTotalOutstanding] = useState<number>(0);
+  const [totalSettled, setTotalSettled] = useState<number>(0);
+  const [recoveryRate, setRecoveryRate] = useState<number>(0);
+  
+  // Form and Interaction States
   const [debtorName, setDebtorName] = useState('');
   const [amount, setAmount] = useState('');
   const [verificationPin, setVerificationPin] = useState('');
   const [activeRecordId, setActiveRecordId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Search & Filter States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterTab, setFilterTab] = useState<'All' | 'Unpaid' | 'Paid'>('All');
 
   // Fetch Matrix
   const fetchLedgerMatrix = async () => {
@@ -19,6 +30,7 @@ export default function LuxuryLedger() {
       const response = await fetch('/api/due');
       const result = await response.json();
       if (result.success) {
+        // Unpaid upore ebong Paid niche thakar sorting logic
         const sortedData = [...result.data].sort((a, b) => {
           if (a.status === 'Unpaid' && b.status === 'Paid') return -1;
           if (a.status === 'Paid' && b.status === 'Unpaid') return 1;
@@ -27,6 +39,17 @@ export default function LuxuryLedger() {
         
         setData(sortedData);
         setTotalOutstanding(result.totalDue);
+
+        // Advance Analytics Calculation
+        const paidSum = result.data
+          .filter((item: any) => item.status === 'Paid')
+          .reduce((sum: number, item: any) => sum + item.amount, 0);
+        
+        setTotalSettled(paidSum);
+
+        const totalVolume = result.totalDue + paidSum;
+        const rate = totalVolume > 0 ? (paidSum / totalVolume) * 100 : 0;
+        setRecoveryRate(Math.round(rate));
       }
     } catch (error) {
       console.error("Systemic archival retrieval exception:", error);
@@ -66,11 +89,10 @@ export default function LuxuryLedger() {
     }
   };
 
-  // Settle / Clear Balance Handler
+  // Settle Handler
   const handleClearBalance = async (item: any) => {
     if (!verificationPin) return;
 
-    // Secure Verification Check through API Layer
     try {
       setIsLoading(true);
       const response = await fetch('/api/due', {
@@ -79,7 +101,6 @@ export default function LuxuryLedger() {
         body: JSON.stringify({ 
           action: 'MARK_PAID', 
           rowIndex: item.rowIndex,
-          // Sending pin to backend where validation logic actually safely runs
           pin: verificationPin 
         })
       });
@@ -91,7 +112,6 @@ export default function LuxuryLedger() {
         setActiveRecordId(null);
         await fetchLedgerMatrix();
       } else {
-        // Simple elegant feedback on failure
         alert(result.error || 'Access Denied: Invalid Authentication Token');
         setVerificationPin('');
       }
@@ -103,12 +123,19 @@ export default function LuxuryLedger() {
     }
   };
 
+  // Live Filtering Mechanism
+  const filteredData = data.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTab = filterTab === 'All' ? true : item.status === filterTab;
+    return matchesSearch && matchesTab;
+  });
+
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 p-6 font-sans tracking-tight antialiased select-none">
-      <div className="max-w-md mx-auto space-y-8">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 p-4 md:p-6 font-sans tracking-tight antialiased select-none">
+      <div className="max-w-md mx-auto space-y-6">
         
         {/* Minimalist Editorial Header */}
-        <header className="pt-4 border-b border-zinc-900 pb-6 flex items-end justify-between">
+        <header className="pt-4 border-b border-zinc-900 pb-5 flex items-end justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400/70'}`}></span>
@@ -118,12 +145,39 @@ export default function LuxuryLedger() {
           </div>
           
           <div className="text-right">
-            <p className="text-[9px] uppercase tracking-widest text-zinc-500 font-medium">Outstanding Aggregate</p>
-            <p className="text-xl font-light text-zinc-100 font-mono mt-0.5">
-              ৳{totalOutstanding.toLocaleString()}
+            <p className="text-[9px] uppercase tracking-widest text-zinc-500 font-medium">Registry Status</p>
+            <p className="text-xs font-mono font-light text-zinc-400 mt-1">
+              {isLoading ? 'Syncing...' : 'Encrypted Connection'}
             </p>
           </div>
         </header>
+
+        {/* Executive Dashboard Metrics Grid */}
+        <div className="grid grid-cols-3 gap-2.5">
+          <div className="bg-[#0e0e11] border border-zinc-900 rounded-xl p-3 space-y-1">
+            <div className="flex items-center gap-1 text-zinc-500">
+              <FiActivity className="w-3 h-3 text-rose-500/70" />
+              <p className="text-[8px] uppercase tracking-wider font-medium">Outstanding</p>
+            </div>
+            <p className="text-xs font-mono font-medium text-rose-400">৳{totalOutstanding.toLocaleString()}</p>
+          </div>
+
+          <div className="bg-[#0e0e11] border border-zinc-900 rounded-xl p-3 space-y-1">
+            <div className="flex items-center gap-1 text-zinc-500">
+              <FiCheckCircle className="w-3 h-3 text-emerald-500/70" />
+              <p className="text-[8px] uppercase tracking-wider font-medium">Settled Sum</p>
+            </div>
+            <p className="text-xs font-mono font-medium text-emerald-400">৳{totalSettled.toLocaleString()}</p>
+          </div>
+
+          <div className="bg-[#0e0e11] border border-zinc-900 rounded-xl p-3 space-y-1">
+            <div className="flex items-center gap-1 text-zinc-500">
+              <FiTrendingUp className="w-3 h-3 text-amber-500/70" />
+              <p className="text-[8px] uppercase tracking-wider font-medium">Recovery</p>
+            </div>
+            <p className="text-xs font-mono font-medium text-amber-400">{recoveryRate}%</p>
+          </div>
+        </div>
 
         {/* Form Panel - Clean Border Box */}
         <section className="bg-[#0e0e11] border border-zinc-900 rounded-xl p-5 space-y-4 shadow-sm">
@@ -133,26 +187,22 @@ export default function LuxuryLedger() {
           </div>
           
           <form onSubmit={handleCommitRecord} className="space-y-3">
-            <div className="space-y-1">
-              <input 
-                type="text" 
-                placeholder="Entity / Client Identifier" 
-                value={debtorName}
-                disabled={isLoading}
-                onChange={(e) => setDebtorName(e.target.value)}
-                className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-800 transition-colors disabled:opacity-40"
-              />
-            </div>
-            <div className="space-y-1">
-              <input 
-                type="number" 
-                placeholder="Principal Value (BDT)" 
-                value={amount}
-                disabled={isLoading}
-                onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-800 transition-colors disabled:opacity-40 font-mono"
-              />
-            </div>
+            <input 
+              type="text" 
+              placeholder="Entity / Client Identifier" 
+              value={debtorName}
+              disabled={isLoading}
+              onChange={(e) => setDebtorName(e.target.value)}
+              className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-800 transition-colors disabled:opacity-40"
+            />
+            <input 
+              type="number" 
+              placeholder="Principal Value (BDT)" 
+              value={amount}
+              disabled={isLoading}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-800 transition-colors disabled:opacity-40 font-mono"
+            />
             <button 
               type="submit" 
               disabled={isLoading || !debtorName || !amount}
@@ -163,24 +213,56 @@ export default function LuxuryLedger() {
           </form>
         </section>
 
+        {/* Live Filter Control Module */}
+        <div className="space-y-2.5">
+          {/* Minimalist Search Bar */}
+          <div className="relative flex items-center">
+            <FiSearch className="absolute left-3.5 text-zinc-600 w-3.5 h-3.5" />
+            <input 
+              type="text"
+              placeholder="Search active statement registries..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[#0e0e11] border border-zinc-900 rounded-xl pl-10 pr-4 py-2.5 text-xs focus:outline-none focus:border-zinc-800 text-zinc-200 placeholder-zinc-700 transition-colors"
+            />
+          </div>
+
+          {/* Tab Filter System */}
+          <div className="flex gap-1.5 bg-[#0e0e11]/50 border border-zinc-900 p-1 rounded-lg">
+            {(['All', 'Unpaid', 'Paid'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setFilterTab(tab)}
+                className={`flex-1 text-center py-1.5 text-[10px] uppercase font-medium tracking-wider rounded-md transition-all ${
+                  filterTab === tab 
+                    ? 'bg-zinc-800 text-zinc-100 shadow-sm' 
+                    : 'text-zinc-500 hover:text-zinc-300'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Statement Records Stream */}
-        <section className="space-y-4">
+        <section className="space-y-3">
           <div className="flex items-center justify-between border-b border-zinc-900 pb-2">
             <h2 className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Activity Registry</h2>
             <span className="text-[9px] font-mono text-zinc-600 bg-zinc-950 border border-zinc-900 px-2 py-0.5 rounded-md">
-              {data.length} Fields
+              {filteredData.length} Fields Match
             </span>
           </div>
           
-          <div className="space-y-2 max-h-[42vh] overflow-y-auto pr-1 custom-scrollbar">
-            {data.map((item) => {
+          <div className="space-y-2 max-h-[38vh] overflow-y-auto pr-1 custom-scrollbar">
+            {filteredData.map((item) => {
               const isPaid = item.status === 'Paid';
               return (
                 <div 
                   key={item.id} 
                   className={`p-4 rounded-xl border transition-all duration-300 flex justify-between items-center ${
                     isPaid 
-                      ? 'bg-transparent border-dashed border-zinc-900 opacity-30' 
+                      ? 'bg-transparent border-dashed border-zinc-900 opacity-25' 
                       : 'bg-[#0e0e11] border-zinc-900/80 hover:border-zinc-800'
                   }`}
                 >
@@ -256,9 +338,9 @@ export default function LuxuryLedger() {
               );
             })}
 
-            {data.length === 0 && !isLoading && (
+            {filteredData.length === 0 && !isLoading && (
               <div className="text-center text-[10px] uppercase tracking-widest text-zinc-600 py-10 font-medium">
-                No ledger balance sheets recorded.
+                No matching archival statements found.
               </div>
             )}
           </div>
