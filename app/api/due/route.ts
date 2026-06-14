@@ -58,12 +58,12 @@ export async function GET() {
   }
 }
 
-// ২. POST Request: Data Add kora ebong Status 'Paid' mark kora
+// ২. POST Request: Data Add kora ebong Status 'Paid' mark kora (With PIN Validation)
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { action, name, amount, rowIndex } = body;
-    
+    const { action, name, amount, rowIndex, pin } = body; // UI theke pin field rcv kora holo
+
     const auth = getAuth();
     const doc = new GoogleSpreadsheet(SPREADSHEET_ID, auth);
     await doc.loadInfo();
@@ -93,10 +93,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Entry Added!' });
     }
 
-    // খ) স্ট্যাটাস 'Paid' মার্ক করার লজিক
+    // খ) স্ট্যাটাস 'Paid' মার্ক করার লজিক (Secure Check)
     if (action === 'MARK_PAID') {
-      if (rowIndex === undefined || rowIndex === null) throw new Error('Missing row index');
+      // ১. Secure PIN Verification
+      const ADMIN_SECURE_PIN = "0024"; // Ekhane pin secure vabe backende thakbe
+      if (pin !== ADMIN_SECURE_PIN) {
+        return NextResponse.json({ success: false, error: 'Access Denied: Invalid Authentication PIN!' }, { status: 401 });
+      }
+
+      // ২. Index Verification
+      if (rowIndex === undefined || rowIndex === null) {
+        return NextResponse.json({ success: false, error: 'Missing row index' }, { status: 400 });
+      }
+      
       const rowToUpdate = rows[rowIndex];
+      if (!rowToUpdate) {
+        return NextResponse.json({ success: false, error: 'Target record row not found' }, { status: 404 });
+      }
+
       rowToUpdate.set('Status', 'Paid');
       await rowToUpdate.save();
       return NextResponse.json({ success: true, message: 'Marked as Paid!' });
