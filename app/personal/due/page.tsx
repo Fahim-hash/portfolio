@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FiArrowUpRight, FiLayers, FiCheck, FiLock, FiCalendar, FiArrowLeft } from 'react-icons/fi';
+import { FiArrowUpRight, FiLayers, FiCheck, FiCalendar, FiArrowLeft } from 'react-icons/fi';
 
 export default function LuxuryLedger() {
   const [data, setData] = useState<any[]>([]);
@@ -12,6 +12,7 @@ export default function LuxuryLedger() {
   const [activeRecordId, setActiveRecordId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Fetch Matrix
   const fetchLedgerMatrix = async () => {
     try {
       setIsLoading(true);
@@ -38,6 +39,7 @@ export default function LuxuryLedger() {
     fetchLedgerMatrix();
   }, []);
 
+  // Submit Handler
   const handleCommitRecord = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!debtorName || !amount) return;
@@ -54,6 +56,8 @@ export default function LuxuryLedger() {
         setDebtorName('');
         setAmount('');
         await fetchLedgerMatrix();
+      } else {
+        alert(result.error || 'Submission failed');
       }
     } catch (error) {
       console.error(error);
@@ -62,29 +66,38 @@ export default function LuxuryLedger() {
     }
   };
 
+  // Settle / Clear Balance Handler
   const handleClearBalance = async (item: any) => {
-    const AUTH_TOKEN_KEY = process.env.NEXT_PUBLIC_ADMIN_SECURE_PIN || "0024";
+    if (!verificationPin) return;
 
-    if (verificationPin !== AUTH_TOKEN_KEY) {
-      setVerificationPin('');
-      return;
-    }
-
+    // Secure Verification Check through API Layer
     try {
       setIsLoading(true);
       const response = await fetch('/api/due', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'MARK_PAID', rowIndex: item.rowIndex })
+        body: JSON.stringify({ 
+          action: 'MARK_PAID', 
+          rowIndex: item.rowIndex,
+          // Sending pin to backend where validation logic actually safely runs
+          pin: verificationPin 
+        })
       });
+      
       const result = await response.json();
+      
       if (result.success) {
         setVerificationPin('');
         setActiveRecordId(null);
         await fetchLedgerMatrix();
+      } else {
+        // Simple elegant feedback on failure
+        alert(result.error || 'Access Denied: Invalid Authentication Token');
+        setVerificationPin('');
       }
     } catch (error) {
       console.error(error);
+      alert('Network transmission failed');
     } finally {
       setIsLoading(false);
     }
@@ -98,7 +111,7 @@ export default function LuxuryLedger() {
         <header className="pt-4 border-b border-zinc-900 pb-6 flex items-end justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400/70"></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${isLoading ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400/70'}`}></span>
               <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-semibold">Statement Index</p>
             </div>
             <h1 className="text-xl font-light tracking-wide text-zinc-200">VALOIS <span className="font-serif italic text-zinc-400">Ledger</span></h1>
@@ -127,7 +140,7 @@ export default function LuxuryLedger() {
                 value={debtorName}
                 disabled={isLoading}
                 onChange={(e) => setDebtorName(e.target.value)}
-                className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-700 transition-colors disabled:opacity-40"
+                className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-800 transition-colors disabled:opacity-40"
               />
             </div>
             <div className="space-y-1">
@@ -137,7 +150,7 @@ export default function LuxuryLedger() {
                 value={amount}
                 disabled={isLoading}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-700 transition-colors disabled:opacity-40 font-mono"
+                className="w-full bg-[#050507] border border-zinc-900 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-zinc-700 text-zinc-200 placeholder-zinc-800 transition-colors disabled:opacity-40 font-mono"
               />
             </div>
             <button 
@@ -167,7 +180,7 @@ export default function LuxuryLedger() {
                   key={item.id} 
                   className={`p-4 rounded-xl border transition-all duration-300 flex justify-between items-center ${
                     isPaid 
-                      ? 'bg-transparent border-dashed border-zinc-900 opacity-40' 
+                      ? 'bg-transparent border-dashed border-zinc-900 opacity-30' 
                       : 'bg-[#0e0e11] border-zinc-900/80 hover:border-zinc-800'
                   }`}
                 >
@@ -204,7 +217,7 @@ export default function LuxuryLedger() {
                           <button 
                             onClick={() => { setActiveRecordId(item.id); setVerificationPin(''); }} 
                             disabled={isLoading}
-                            className="text-[10px] text-zinc-400 hover:text-zinc-100 bg-zinc-900 hover:bg-zinc-850 px-2.5 py-1 rounded border border-zinc-800 transition-all font-medium uppercase tracking-wider"
+                            className="text-[10px] text-zinc-400 hover:text-zinc-100 bg-zinc-900 hover:bg-zinc-800 px-2.5 py-1 rounded border border-zinc-800 transition-all font-medium uppercase tracking-wider"
                           >
                             Settle
                           </button>
@@ -215,18 +228,21 @@ export default function LuxuryLedger() {
                               placeholder="••••" 
                               maxLength={4}
                               value={verificationPin}
+                              disabled={isLoading}
                               onChange={(e) => setVerificationPin(e.target.value)}
-                              className="w-10 bg-transparent text-center text-xs focus:outline-none text-zinc-200 font-mono tracking-widest placeholder-zinc-800"
+                              className="w-10 bg-transparent text-center text-xs focus:outline-none text-zinc-200 font-mono tracking-widest placeholder-zinc-800 disabled:opacity-40"
                             />
                             <button 
                               onClick={() => handleClearBalance(item)}
-                              className="text-zinc-400 hover:text-emerald-400 p-1"
+                              disabled={isLoading || verificationPin.length < 4}
+                              className="text-zinc-400 hover:text-emerald-400 p-1 disabled:opacity-30"
                               title="Confirm"
                             >
                               <FiCheck className="w-3 h-3" />
                             </button>
                             <button 
                               onClick={() => setActiveRecordId(null)} 
+                              disabled={isLoading}
                               className="text-zinc-600 hover:text-zinc-400 p-1"
                             >
                               <FiArrowLeft className="w-3 h-3" />
