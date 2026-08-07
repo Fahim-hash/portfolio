@@ -9,71 +9,7 @@ import { SiBehance } from "react-icons/si";
 
 export default function Portfolio() {
 
-  const [showPopup, setShowPopup] = useState(false);
-
-  useEffect(() => {
-    // 1.5 second por popup asbe
-    const timer = setTimeout(() => setShowPopup(true), 1500);
-    return (<main className="relative min-h-screen bg-black overflow-x-hidden">
-      
-      {/* 1. Tomar existing content guloke ei div diye wrap koro */}
-      <div className={`transition-all duration-1000 ${showPopup ? "blur-md opacity-40 pointer-events-none" : "blur-0 opacity-100"}`}>
-        <Hero />
-        <Featured />
-        <About />
-        <Footer />
-      </div>
-
-      {/* 2. Eita holo tomake deya shudhumatro Popup er code */}
-      <AnimatePresence>
-        {showPopup && (
-          <div className="fixed inset-0 z-[999] flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="max-w-md w-full bg-[#0a0a0a] border border-zinc-800/50 p-10 rounded-[3rem] shadow-[0_0_80px_rgba(0,0,0,1)] text-center relative overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-              
-              <div className="flex justify-center mb-6">
-                 <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/5 border border-amber-500/20 rounded-full">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shadow-[0_0_10px_#f59e0b]" />
-                    <span className="text-[9px] font-mono text-amber-500 uppercase tracking-[0.3em]">Status: On Hiatus</span>
-                 </div>
-              </div>
-
-              <h2 className="text-white text-3xl font-black italic tracking-tighter mb-4 leading-tight">
-                TEMPORARY <span className="text-indigo-500">PAUSE</span>
-              </h2>
-
-              <p className="text-zinc-500 text-sm leading-relaxed mb-10 font-medium">
-                I am currently focused on my **HSC '26 Board Examinations**. 
-                You can still browse my work below, but please note that I’ll be back for collaborations in July 2026.
-              </p>
-
-              <div className="space-y-4">
-                <motion.button
-                  whileHover={{ scale: 1.02, backgroundColor: "#6366f1", color: "#fff" }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowPopup(false)}
-                  className="w-full py-4 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[10px] rounded-full transition-all duration-300"
-                >
-                  Enter Portfolio
-                </motion.button>
-                
-                <div className="text-[8px] text-zinc-700 font-mono tracking-[0.4em] uppercase">
-                   // Accessing Archive_Log_2026
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-      
-    </main>) => clearTimeout(timer);
-  }, []);
+  
   
   const clientLogos = [
   { name: "TongErKhobor", src: "/logos/tongerkhobor.png", url: "https://www.instagram.com/tongerkhobor" },
@@ -170,8 +106,9 @@ const testimonials = [
             {/* Big Name Section */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3>
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3><br/>
+           <span className="text-red-600 uppercase text-sm tracking-[0.3em] font-black animate-pulse"> Currently in a Break </span>
               </div>
               
               <h1 className="text-7xl md:text-7xl font-black tracking-tighter leading-[0.9]">
@@ -679,11 +616,20 @@ const testimonials = [
           variants={item}
           className="md:col-span-4 bg-zinc-900/30 border border-zinc-800/50 backdrop-blur-sm rounded-[2.5rem] p-10 mt-8"
         >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-            <div>
-              <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
-              <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
-            </div>
+         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+  <div>
+    <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
+    <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
+    
+    {/* Warning Section */}
+    <p className="text-red-600 text-lg mt-4 animate-pulse font-semibold"> Warning! </p>
+    <p className="text-zinc-500 text-lg mt-2">
+      Some accounts may be deactivated. If your inquiry is urgent, please use email to connect.
+    </p>
+  </div>
+</div>
+
             <a href="mailto:fahimnafiz70@gmail.com" className="px-8 py-4 bg-indigo-600 rounded-full font-semibold hover:bg-indigo-500 transition-colors flex items-center gap-2 group">
               Drop an Email
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
