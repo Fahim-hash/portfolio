@@ -106,9 +106,9 @@ const testimonials = [
             {/* Big Name Section */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <h3 className="text-zinc-500 uppercase text-sm tracking-[0.3em] font-bold">Creative Designer</h3><br/>
-           <span className="text-red-600 uppercase text-sm tracking-[0.3em] font-black animate-pulse"> Currently in a Break </span>
+           
               </div>
               
               <h1 className="text-7xl md:text-7xl font-black tracking-tighter leading-[0.9]">
@@ -622,11 +622,6 @@ const testimonials = [
     <h2 className="text-4xl font-bold tracking-tight">Let's connect</h2>
     <p className="text-zinc-500 text-lg mt-2">Open for collaborations and interesting projects.</p>
     
-    {/* Warning Section */}
-    <p className="text-red-600 text-lg mt-4 animate-pulse font-semibold"> Warning! </p>
-    <p className="text-zinc-500 text-lg mt-2">
-      Some accounts may be deactivated. If your inquiry is urgent, please use email to connect.
-    </p>
   </div>
 </div>
 
