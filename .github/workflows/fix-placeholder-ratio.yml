@@ -1,0 +1,41 @@
+name: Fix placeholder ratio
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-placeholder-ratio.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore and change placeholders
+        shell: bash
+        run: |
+          git checkout a1823767fb9dcf8867c296d55618e42f995beeaa -- app/page.tsx public/designs/placeholder-01.svg public/designs/placeholder-02.svg public/designs/placeholder-03.svg
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app/page.tsx')
+          s=p.read_text()
+          s=s.replace('4:3 Design Placeholder','3:4 Design Placeholder').replace('aspect-[4/3]','aspect-[3/4]')
+          p.write_text(s)
+          for i in range(1,4):
+              p=Path(f'public/designs/placeholder-0{i}.svg')
+              s=p.read_text()
+              s=s.replace('viewBox="0 0 1200 900" width="1200" height="900"','viewBox="0 0 900 1200" width="900" height="1200"')
+              s=s.replace('4 by 3 portfolio design placeholder','3 by 4 portfolio design placeholder').replace('4 : 3 / PORTRAIT CARD','3 : 4 / PORTRAIT CARD')
+              p.write_text(s)
+          PY
+      - name: Commit changes and remove workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/fix-placeholder-ratio.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/page.tsx public/designs/placeholder-01.svg public/designs/placeholder-02.svg public/designs/placeholder-03.svg .github/workflows/fix-placeholder-ratio.yml
+          git commit -m 'Change design placeholders to 3:4 portrait ratio'
+          git push origin HEAD:main
