@@ -1,0 +1,49 @@
+name: Add design placeholders
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-design-placeholders.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  add-placeholders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add 3 placeholder cards
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('app/page.tsx')
+          text = path.read_text(encoding='utf-8')
+
+          if 'placeholder-01.svg' in text:
+              print('Placeholder cards already present; nothing to do.')
+          else:
+              marker = '''            </motion.div>\n\n          </div>\n        </motion.div> \n\n{/* --- VIDEO SHOWCASE SECTION --- */}'''
+              cards = '''            </motion.div>\n\n            {/* 11. 4:3 Design Placeholder */}\n            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/3]">\n              <Image src="/designs/placeholder-01.svg" alt="Design Placeholder 01" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />\n              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">\n                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>\n                <h3 className="text-xl font-bold text-white">Add Design Here</h3>\n              </div>\n            </motion.div>\n\n            {/* 12. 4:3 Design Placeholder */}\n            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/3]">\n              <Image src="/designs/placeholder-02.svg" alt="Design Placeholder 02" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />\n              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">\n                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>\n                <h3 className="text-xl font-bold text-white">Add Design Here</h3>\n              </div>\n            </motion.div>\n\n            {/* 13. 4:3 Design Placeholder */}\n            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/3]">\n              <Image src="/designs/placeholder-03.svg" alt="Design Placeholder 03" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />\n              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">\n                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>\n                <h3 className="text-xl font-bold text-white">Add Design Here</h3>\n              </div>\n            </motion.div>\n\n          </div>\n        </motion.div> \n\n{/* --- VIDEO SHOWCASE SECTION --- */}'''
+              if marker not in text:
+                  raise SystemExit('Target Selected Designs marker not found; no changes made.')
+              path.write_text(text.replace(marker, cards, 1), encoding='utf-8')
+              print('Added 3 4:3 placeholder cards.')
+
+      - name: Commit changes and remove temporary workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/add-design-placeholders.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/page.tsx .github/workflows/add-design-placeholders.yml
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Add 3 4:3 design placeholder cards'
+          git push origin HEAD:main
