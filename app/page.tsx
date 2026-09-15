@@ -369,7 +369,7 @@ const testimonials = [
 
             {/* 12. 3:4 Design Placeholder */}
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
-              <Image src="/designs/placeholder-02.svg" alt="Design Placeholder 02" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <Image src="/designs/SSC%20Result.png" alt="Design Placeholder 02" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>
                 <h3 className="text-xl font-bold text-white">Add Design Here</h3>
