@@ -362,8 +362,8 @@ const testimonials = [
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
               <Image src="/designs/chithi.png" alt="Design Placeholder 01" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>
-                <h3 className="text-xl font-bold text-white">Add Design Here</h3>
+                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">World Letter Day</span>
+                <h3 className="text-xl font-bold text-white">Tongerkhobor</h3>
               </div>
             </motion.div>
 
@@ -371,17 +371,17 @@ const testimonials = [
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
               <Image src="/designs/SSC%20Result.png" alt="Design Placeholder 02" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>
-                <h3 className="text-xl font-bold text-white">Add Design Here</h3>
+                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">SSC 26' Pass Rate</span>
+                <h3 className="text-xl font-bold text-white">Tongerkhobor</h3>
               </div>
             </motion.div>
 
             {/* 13. 3:4 Design Placeholder */}
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
-              <Image src="/designs/placeholder-03.svg" alt="Design Placeholder 03" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <Image src="/designs/Artboard%207.png" alt="Design Placeholder 03" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Your Design</span>
-                <h3 className="text-xl font-bold text-white">Add Design Here</h3>
+                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Admission Preparation</span>
+                <h3 className="text-xl font-bold text-white">tongerkhobor</h3>
               </div>
             </motion.div>
 
