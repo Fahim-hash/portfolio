@@ -7,6 +7,52 @@ import { ArrowUpRight } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { SiBehance } from "react-icons/si";
 
+
+function LazyPreviewVideo({
+  src,
+  poster,
+  className,
+}: {
+  src: string;
+  poster?: string;
+  className?: string;
+}) {
+  const ref = React.useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = React.useState(false);
+
+  React.useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '300px 0px' }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={shouldLoad ? src : undefined}
+      poster={poster}
+      autoPlay={shouldLoad}
+      muted
+      loop
+      playsInline
+      preload="none"
+      className={className}
+    />
+  );
+}
+
 export default function Portfolio() {
 
   
@@ -231,9 +277,12 @@ const testimonials = [
         className="group relative flex flex-col items-center justify-center p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all duration-500 shadow-xl"
       >
         <div className="relative w-12 h-12 mb-6 transition-all duration-500 transform group-hover:scale-110">
-            <img 
-                src={`/logos/${skill.img}`} 
-                alt={skill.name} 
+            <Image
+                src={`/logos/${skill.img}`}
+                alt={skill.name}
+                width={48}
+                height={48}
+                sizes="48px"
                 className="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500"
             />
         </div>
@@ -408,14 +457,7 @@ const testimonials = [
               whileHover={{ y: -5 }}
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
             >
-              <video 
-                src="/videos/main.mp4" 
-                poster="/videos/thumb1.jpg"
-                autoPlay 
-                muted 
-                loop 
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700"
-              />
+              <LazyPreviewVideo src="/videos/main.mp4" poster="/videos/thumb1.jpg" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-8 flex flex-col justify-end">
                 <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Relax Studio</span>
                 <h3 className="text-3xl font-bold text-white">Promotional Motion</h3>
@@ -432,14 +474,7 @@ const testimonials = [
               whileHover={{ y: -5 }}
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
             >
-              <video 
-                src="/videos/AQMKKr8tc8mqMomgTp0yvDM0SonscX5DheqZb0A8PcLMvAL8fWWTL8KIQtvSoHBa4R9aOyVBFYzo2xlyDSysz_57MMNuIhtx65L1Im45Kg.mp4" 
-                poster="/videos/thumb2.jpg"
-                autoPlay 
-                muted 
-                loop 
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700"
-              />
+              <LazyPreviewVideo src="/videos/AQMKKr8tc8mqMomgTp0yvDM0SonscX5DheqZb0A8PcLMvAL8fWWTL8KIQtvSoHBa4R9aOyVBFYzo2xlyDSysz_57MMNuIhtx65L1Im45Kg.mp4" poster="/videos/thumb2.jpg" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-8 flex flex-col justify-end">
                 <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Willian's study tour 26</span>
                 <h3 className="text-3xl font-bold text-white">New Year Video</h3>
@@ -469,11 +504,7 @@ const testimonials = [
               whileHover={{ y: -5 }}
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
             >
-              <video 
-                src="/videos/AQOKsDmJ8VnS7Kh99V0l4Fwgiu0ViZnniPzTFvmS2aEfsrXe5twZkJd2N9GwZpx0a_GXkTcdIkd9GHhLY6R78DAylhJbnMZYT58KQvlAiZThIg.mp4" 
-                autoPlay muted loop playsInline
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-all duration-700"
-              />
+              <LazyPreviewVideo src="/videos/AQOKsDmJ8VnS7Kh99V0l4Fwgiu0ViZnniPzTFvmS2aEfsrXe5twZkJd2N9GwZpx0a_GXkTcdIkd9GHhLY6R78DAylhJbnMZYT58KQvlAiZThIg.mp4" className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-all duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-10 flex flex-col justify-end">
                 <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Willian's Study Tour 26</span>
                 <h3 className="text-3xl font-black text-white leading-tight">Official Promotional Reel</h3>
@@ -490,11 +521,7 @@ const testimonials = [
               whileHover={{ y: -5 }}
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
             >
-              <video 
-                src="/videos/AQO1So12voezPc1KQwH5LFJPTGZYHbzCgfqvClz0-Bcafh9e06klMBh_tVCxjRZ4k2ZYZaQrbWI6BEyRbiZpBWqA4S6Y1Pg-e8SuMNNmVek7hw.mp4" 
-                autoPlay muted loop playsInline
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-all duration-700"
-              />
+              <LazyPreviewVideo src="/videos/AQO1So12voezPc1KQwH5LFJPTGZYHbzCgfqvClz0-Bcafh9e06klMBh_tVCxjRZ4k2ZYZaQrbWI6BEyRbiZpBWqA4S6Y1Pg-e8SuMNNmVek7hw.mp4" className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-all duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-10 flex flex-col justify-end">
                 <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">WLC Nobinboron 25</span>
                 <h3 className="text-3xl font-black text-white leading-tight">Official Promotional Reel</h3>
@@ -522,8 +549,10 @@ const testimonials = [
                   <div className="relative aspect-video w-full bg-black">
                     <video 
                       src={selectedVideo.src} 
-                      controls 
-                      autoPlay 
+                      controls
+                      autoPlay
+                      playsInline
+                      preload="metadata"
                       className="w-full h-full object-contain"
                     />
                   </div>
