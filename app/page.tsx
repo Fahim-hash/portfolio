@@ -107,7 +107,6 @@ const testimonials = [
     { name: "Instagram", icon: FaInstagram, url: "https://instagram.com/mr_relax_bro", color: "hover:text-[#E4405F]" },
     { name: "Behance", icon: SiBehance, url: "https://www.behance.net/fahimmuddasir", color: "hover:text-[#0057ff]" },
     { name: "WhatsApp", icon: FaWhatsapp, url: "https://wa.me/01855941177", color: "hover:text-[#25D366]" },
-    { name: "LinkedIn", icon: FaLinkedinIn, url: "https://linkedin.com", color: "hover:text-[#0077B5]" },
     { name: "X (Twitter)", icon: FaXTwitter, url: "https://x.com/mr_relax_bro", color: "hover:text-white" },
   ];
 
