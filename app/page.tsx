@@ -64,6 +64,7 @@ export default function Portfolio() {
   { name: "Willes Literary Club", src: "/logos/vb.png", url: "https://www.wlc.pro.bd" },
   { name: "RelaxStudio", src: "/logos/relax.png", url: "https://www.instagram.com/relaxstudio__" },
   { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
+  { name: "Fibonacchi Bangladesh", src: "/logos/fibo@500x.png", url: "https://www.facebook.com/fibonaccibd" },
 ];
 
 const testimonials = [
