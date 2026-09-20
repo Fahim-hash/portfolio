@@ -108,7 +108,7 @@ const testimonials = [
     { name: "Behance", icon: SiBehance, url: "https://www.behance.net/fahimmuddasir", color: "hover:text-[#0057ff]" },
     { name: "WhatsApp", icon: FaWhatsapp, url: "https://wa.me/01855941177", color: "hover:text-[#25D366]" },
     { name: "LinkedIn", icon: FaLinkedinIn, url: "https://linkedin.com", color: "hover:text-[#0077B5]" },
-    { name: "X (Twitter)", icon: FaXTwitter, url: "https://x.com/", color: "hover:text-white" },
+    { name: "X (Twitter)", icon: FaXTwitter, url: "https://x.com/mr_relax_bro", color: "hover:text-white" },
   ];
 
   return (
@@ -711,10 +711,20 @@ const testimonials = [
           </div>
         </motion.div>
 
-        {/* Footer info */}
-        <motion.div variants={item} className="md:col-span-4 text-center text-zinc-700 py-8 text-sm font-mono">
-            © 2026 Syed Fahim Muddasir.
-        </motion.div>
+       {/* Footer info */}
+<motion.div variants={item} className="md:col-span-4 text-center text-zinc-700 py-8 text-sm font-mono">
+  <p>
+    &copy; 2026 Syed Fahim Muddasir. Build by{" "}
+    <a 
+      href="https://www.instagram.com/relaxstudio__" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="text-zinc-400 hover:text-white transition-colors duration-200 underline underline-offset-4 decoration-zinc-600 hover:decoration-white"
+    >
+      RelaxStudio
+    </a>
+  </p>
+</motion.div>
 
       </motion.div>
     </main>
