@@ -468,16 +468,16 @@ const testimonials = [
             <motion.div 
               onClick={() => setSelectedVideo({
                 src: "/videos/comp-4.mp4",
-                title: "Trial Reel",
-                tag: "Omni MUN"
+                title: "Omni MUN",
+                tag: "Trial Reel"
               })}
               whileHover={{ y: -5 }}
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
             >
               <LazyPreviewVideo src="/videos/comp-4.mp4" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Trial Reel</span>
-                <h3 className="text-3xl font-bold text-white">OMNI MUN</h3>
+                <span className="text-[#5865F2] text-xs font-bold uppercase tracking-widest mb-1">Omni MUN</span>
+                <h3 className="text-3xl font-bold text-white">Trial Reel</h3>
               </div>
             </motion.div>
 
