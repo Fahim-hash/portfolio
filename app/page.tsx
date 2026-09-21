@@ -468,8 +468,8 @@ const testimonials = [
             <motion.div 
               onClick={() => setSelectedVideo({
                 src: "/videos/comp-4.mp4",
-                title: "OMNI MUN",
-                tag: "Trial Reel"
+                title: "Trial Reel",
+                tag: "Omni MUN"
               })}
               whileHover={{ y: -5 }}
               className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video cursor-pointer"
