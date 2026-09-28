@@ -307,148 +307,131 @@ const testimonials = [
     ))}
   </div>
 </motion.div>
-        {/* --- DESIGNS SHOWCASE SECTION (FIXED 10 CARDS - NO GAPS) --- */}
-        <motion.div variants={item} className="md:col-span-4 mt-12 mb-6">
-          <div className="flex items-end gap-4 mb-8">
-            <h2 className="text-5xl font-black tracking-tighter">Selected <span className="text-indigo-500">Designs</span></h2>
-            <div className="h-[2px] flex-1 bg-zinc-800 mb-3 hidden md:block" />
-            <p className="text-zinc-500 font-mono text-sm mb-2">Visual Showcase 2024-2026</p>
+        {/* --- DESIGNS SHOWCASE SECTION --- */}
+        <motion.div variants={item} className="md:col-span-4 mt-16 mb-8">
+          {/* Section header */}
+          <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="h-px w-10 bg-indigo-500" />
+                <span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.35em]">Selected Work</span>
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black tracking-[-0.06em] leading-none">
+                Selected <span className="text-indigo-500">Designs</span>
+              </h2>
+              <p className="text-zinc-500 mt-4 max-w-xl text-sm md:text-base leading-relaxed">
+                A curated collection of posters, event branding, social creatives and visual experiments.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-zinc-600 font-mono text-[10px] uppercase tracking-widest">
+              <span>2024</span><span className="h-px w-8 bg-zinc-800" /><span>2026</span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 grid-flow-row-dense">
+          {/* Editorial masonry-style showcase */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 auto-rows-[150px]">
             
-            {/* 1. Portrait (1080x1350) */}
-            <motion.div whileHover={{ y: -10 }} className="md:row-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/5]">
-              <Image src="/designs/work1.png" alt="W1" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold tracking-widest uppercase mb-1">TongErKhobor</span>
-                <h3 className="text-3xl font-bold text-white leading-tight">26 March Poster</h3>
+            {/* Hero portrait */}
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-4 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/work1.png" alt="TongErKhobor 26 March Poster" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-70 group-hover:opacity-95 transition-opacity" />
+              <div className="absolute inset-x-0 bottom-0 p-7">
+                <span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.25em]">TongErKhobor</span>
+                <h3 className="text-2xl font-black text-white mt-1">26 March Poster</h3>
               </div>
             </motion.div>
 
-            {/* 2. Wide Card (FB Cover Style) */}
-            <motion.div whileHover={{ y: -10 }} className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video">
-              <Image src="/designs/work2.jpg" alt="W2" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-8 flex flex-col justify-end">
-                <span className="text-[#5865F2] text-xs font-bold tracking-widest uppercase mb-1">Willes Literary Club</span>
-                <h3 className="text-3xl font-bold text-white leading-tight">Event Banner</h3>
-              </div>
-            </motion.div>
-
-            {/* 3. 1080x1080 Design Holder */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square flex items-center justify-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-purple-500/10 group-hover:from-indigo-500/20 group-hover:to-purple-500/20 transition-all duration-700" />
-              <div className="relative z-10 flex flex-col items-center justify-center text-center p-8">
-                <div className="w-16 h-16 rounded-2xl border border-zinc-700 bg-zinc-800/50 flex items-center justify-center mb-5 group-hover:border-indigo-500/50 transition-colors">
-                  <span className="text-zinc-400 group-hover:text-indigo-400 font-mono text-xs font-bold transition-colors">1080²</span>
+            {/* Wide feature */}
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-8 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/work5.png" alt="Willian's Study Tour 26 Full Event Branding" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-7 flex items-end justify-between gap-6">
+                <div>
+                  <span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.25em]">Willian's Study Tour 26</span>
+                  <h3 className="text-2xl md:text-3xl font-black text-white mt-1">Full Event Branding</h3>
                 </div>
-                <span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-2">Design Holder</span>
-                <h3 className="text-xl font-bold text-white">1080 × 1080 px</h3>
-                <p className="text-zinc-500 text-xs mt-2 max-w-[180px]">Square design slot — ready for the next project.</p>
+                <ArrowUpRight className="shrink-0 text-white/50 group-hover:text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
               </div>
             </motion.div>
 
-            {/* 3. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work3.png" alt="W3" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-[10px] font-bold uppercase mb-1">Ta'atuf Foundation</span>
-                <h3 className="text-xl font-bold text-white">Executive Panel Post</h3>
+            {/* 1080 square holder */}
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-dashed border-indigo-500/30 flex items-center justify-center">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12),transparent_60%)] group-hover:bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.2),transparent_65%)] transition-all duration-700" />
+              <div className="absolute inset-5 rounded-[1.5rem] border border-white/5" />
+              <div className="relative text-center px-6">
+                <div className="mx-auto w-14 h-14 rounded-2xl border border-indigo-500/30 bg-indigo-500/10 flex items-center justify-center mb-5">
+                  <span className="font-mono text-xs font-bold text-indigo-300">1080²</span>
+                </div>
+                <span className="text-indigo-400 text-[9px] font-bold uppercase tracking-[0.3em]">Open Slot</span>
+                <h3 className="text-xl font-black text-white mt-2">1080 × 1080 px</h3>
+                <p className="text-zinc-600 text-xs mt-2">Next featured square design</p>
               </div>
             </motion.div>
 
-            {/* 4. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/Artboard 1.png" alt="W4" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-[10px] font-bold uppercase mb-1">Omni Diplomatic Forum</span>
-                <h3 className="text-xl font-bold text-white">Member Recruit Post</h3>
-              </div>
+            {/* Square cards */}
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/work3.png" alt="Ta'atuf Foundation Executive Panel Post" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">Ta'atuf Foundation</span><h3 className="text-xl font-bold mt-1">Executive Panel Post</h3></div>
             </motion.div>
 
-            {/* 5. Wide Card */}
-            <motion.div whileHover={{ y: -10 }} className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video">
-              <Image src="/designs/work5.png" alt="W5" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willian's study tour 26</span>
-                <h3 className="text-3xl font-bold text-white">Full Event Branding</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/Artboard 1.png" alt="Omni Diplomatic Forum Member Recruit Post" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">Omni Diplomatic Forum</span><h3 className="text-xl font-bold mt-1">Member Recruit Post</h3></div>
             </motion.div>
 
-            {/* 6. Tall Card (Right Side) */}
-            <motion.div whileHover={{ y: -10 }} className="md:row-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[4/5]">
-              <Image src="/designs/eid.png" alt="W6" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Relax Studio</span>
-                <h3 className="text-3xl font-bold text-white">Eid Mubarak Post</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/work7.png" alt="Willes Literary Club Poet Birthday Post" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">Willes Literary Club</span><h3 className="text-xl font-bold mt-1">Poet Birthday Post</h3></div>
             </motion.div>
 
-            {/* 7. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work7.png" alt="W7" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
-                <h3 className="text-xl font-bold text-white">Poet Birthday Post</h3>
-              </div>
+            {/* Tall editorial card */}
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-4 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/eid.png" alt="Relax Studio Eid Mubarak Post" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent" />
+              <div className="absolute bottom-0 p-7"><span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.25em]">Relax Studio</span><h3 className="text-2xl font-black mt-1">Eid Mubarak Post</h3></div>
             </motion.div>
 
-            {/* 8. Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work8.png" alt="W8" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Willes Literary Club</span>
-                <h3 className="text-xl font-bold text-white">Mourn Post</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/work8.png" alt="Willes Literary Club Mourn Post" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">Willes Literary Club</span><h3 className="text-xl font-bold mt-1">Mourn Post</h3></div>
             </motion.div>
 
-            {/* 9. Wide Card */}
-            <motion.div whileHover={{ y: -10 }} className="md:col-span-2 group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-video">
-              <Image src="/designs/banner.png" alt="W9" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Concept Design</span>
-                <h3 className="text-3xl font-bold text-white">Practice Design</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/work10.png" alt="Madesiho T-Shirt Design And Poster" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">Madesiho</span><h3 className="text-xl font-bold mt-1">T-Shirt Design & Poster</h3></div>
             </motion.div>
 
-            {/* 10. Final Square */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
-              <Image src="/designs/work10.png" alt="W10" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Madesiho</span>
-                <h3 className="text-xl font-bold text-white">T-Shirt Design And Poster</h3>
-              </div>
+            {/* Bottom wide concepts */}
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-8 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/banner.png" alt="Concept Practice Design" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent" />
+              <div className="absolute bottom-0 p-7"><span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.25em]">Concept Design</span><h3 className="text-2xl md:text-3xl font-black mt-1">Practice Design</h3></div>
             </motion.div>
 
-            {/* 11. 3:4 Design Placeholder */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
-              <Image src="/designs/chithi.png" alt="Design Placeholder 01" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Tongerkhobor</span>
-                <h3 className="text-xl font-bold text-white">World Letter Day</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/chithi.png" alt="TongErKhobor World Letter Day" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">TongErKhobor</span><h3 className="text-xl font-bold mt-1">World Letter Day</h3></div>
             </motion.div>
 
-            {/* 12. 3:4 Design Placeholder */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
-              <Image src="/designs/SSC%20Result.png" alt="Design Placeholder 02" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Tongerkhobor</span>
-                <h3 className="text-xl font-bold text-white">SSC 26' Pass Rate</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/SSC%20Result.png" alt="TongErKhobor SSC 26 Pass Rate" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">TongErKhobor</span><h3 className="text-xl font-bold mt-1">SSC 26' Pass Rate</h3></div>
             </motion.div>
 
-            {/* 13. 3:4 Design Placeholder */}
-            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-[3/4]">
-              <Image src="/designs/Artboard%207.png" alt="Design Placeholder 03" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-transparent p-6 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <span className="text-[#5865F2] text-xs font-bold uppercase mb-1">Tongerkhobor</span>
-                <h3 className="text-xl font-bold text-white">Admission Preparation</h3>
-              </div>
+            <motion.div whileHover={{ y: -6 }} className="md:col-span-4 md:row-span-3 group relative overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800/80">
+              <Image src="/designs/Artboard%207.png" alt="TongErKhobor Admission Preparation" fill className="object-cover opacity-90 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 to-transparent" />
+              <div className="absolute bottom-0 p-6"><span className="text-indigo-400 text-[9px] font-bold uppercase tracking-widest">TongErKhobor</span><h3 className="text-xl font-bold mt-1">Admission Preparation</h3></div>
             </motion.div>
-
           </div>
-        </motion.div> 
+        </motion.div>
 
 {/* --- VIDEO SHOWCASE SECTION --- */}
         <motion.div variants={item} className="md:col-span-4 mt-16 mb-12">
