@@ -335,6 +335,19 @@ const testimonials = [
               </div>
             </motion.div>
 
+            {/* 3. 1080x1080 Design Holder */}
+            <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-purple-500/10 group-hover:from-indigo-500/20 group-hover:to-purple-500/20 transition-all duration-700" />
+              <div className="relative z-10 flex flex-col items-center justify-center text-center p-8">
+                <div className="w-16 h-16 rounded-2xl border border-zinc-700 bg-zinc-800/50 flex items-center justify-center mb-5 group-hover:border-indigo-500/50 transition-colors">
+                  <span className="text-zinc-400 group-hover:text-indigo-400 font-mono text-xs font-bold transition-colors">1080²</span>
+                </div>
+                <span className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.25em] mb-2">Design Holder</span>
+                <h3 className="text-xl font-bold text-white">1080 × 1080 px</h3>
+                <p className="text-zinc-500 text-xs mt-2 max-w-[180px]">Square design slot — ready for the next project.</p>
+              </div>
+            </motion.div>
+
             {/* 3. Square */}
             <motion.div whileHover={{ y: -10 }} className="group relative overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-zinc-800 aspect-square">
               <Image src="/designs/work3.png" alt="W3" fill className="object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-110" />
