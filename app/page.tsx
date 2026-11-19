@@ -65,6 +65,7 @@ export default function Portfolio() {
   { name: "RelaxStudio", src: "/logos/relax.png", url: "https://www.instagram.com/relaxstudio__" },
   { name: "Omni Diplomatic Forum", src: "/logos/odf.png", url: "https://www.facebook.com/OMNIDF" },
   { name: "Fibonacchi Bangladesh", src: "/logos/fibo@500x.png", url: "https://www.facebook.com/fibonaccibd" },
+  { name: "Localoy", src: "/logos/localoy.png", url: "https://localoy.app/" },
 ];
 
 const testimonials = [
